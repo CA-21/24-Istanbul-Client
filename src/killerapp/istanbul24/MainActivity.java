@@ -10,6 +10,7 @@ import android.view.View;
 
 public class MainActivity extends Activity
 {
+	heye
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
