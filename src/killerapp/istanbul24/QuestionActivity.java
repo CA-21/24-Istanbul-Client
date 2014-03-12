@@ -82,7 +82,7 @@ public class QuestionActivity extends Activity implements OnClickListener
 			selected.add(question.getTagID(option));
 			questionCount++;
 
-			// TODO: New places will be added into places arraylist.
+			// TODO: New places will be added from database into places arraylist
 		}
 
 		if (questionCount < 5 && places.size() < 5)
