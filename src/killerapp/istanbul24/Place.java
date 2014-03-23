@@ -7,7 +7,7 @@ public class Place implements Parcelable
 {
 	private int id;
 	private String name;
-	private int matchedTag;
+	private int matchedTag;	// Counter of match
 	
 	public Place(int id, String name)
 	{

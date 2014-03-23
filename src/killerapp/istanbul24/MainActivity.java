@@ -38,7 +38,11 @@ public class MainActivity extends Activity
 		intent.putExtra("question", 0);
 		intent.putParcelableArrayListExtra("places", places);
 		startActivity(intent);	// Activity is created.
-		
+	}
+	
+	public void downloadDemo(View view)
+	{
+		Download.downloadFile(this, "http://sw2.obcdn.net/api/map", "map.zip");
 	}
 
 }
