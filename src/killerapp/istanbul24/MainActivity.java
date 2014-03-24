@@ -2,11 +2,14 @@ package killerapp.istanbul24;
 
 import java.util.ArrayList;
 
+import org.mapsforge.core.model.GeoPoint;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
+import android.widget.Toast;
 
 public class MainActivity extends Activity
 {
@@ -43,6 +46,27 @@ public class MainActivity extends Activity
 	public void downloadDemo(View view)
 	{
 		Download.downloadFile(this, "http://sw2.obcdn.net/api/map", "map.zip");
+	}
+	
+	public void routeDemo(View view)
+	{
+		// If can't unzip and can't find the map directory, stop
+		if (!Download.unzip() && !Download.getDir().exists())
+		{
+			Toast.makeText(this, "Please download the map.", Toast.LENGTH_LONG)
+					.show();
+			return;
+		}
+		else
+			Download.deleteZip();
+		
+		GeoPoint start = new GeoPoint(41.02546548103654, 28.968420743942254);
+		GeoPoint end = new GeoPoint(41.011898495994, 28.97524428367614);
+		
+		Intent intent = new Intent(this, RouteActivity.class);
+		intent.putExtra("start", start);
+		intent.putExtra("end", end);
+		startActivity(intent);
 	}
 
 }

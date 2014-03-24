@@ -2,24 +2,32 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-	android:orientation="vertical"
-	android:weightSum="1"
+    android:orientation="vertical"
+    android:weightSum="1"
     tools:context=".MainActivity" >
 
     <Button
         android:id="@+id/demoButton"
         android:layout_width="fill_parent"
-        android:layout_height="0dp"   
+        android:layout_height="0dp"
         android:layout_weight="0.2"
         android:onClick="startDemo"
         android:text="Question Demo" />
-    
-        <Button
+
+    <Button
         android:id="@+id/downloadButton"
         android:layout_width="fill_parent"
-        android:layout_height="0dp"   
+        android:layout_height="0dp"
         android:layout_weight="0.2"
         android:onClick="downloadDemo"
         android:text="Download Demo" />
+    
+    <Button
+        android:id="@+id/routeButton"
+        android:layout_width="fill_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.2"
+        android:onClick="routeDemo"
+        android:text="Route Demo" />
 
 </LinearLayout>
