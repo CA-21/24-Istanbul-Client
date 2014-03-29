@@ -15,7 +15,6 @@ import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
-import android.util.Log;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -64,7 +63,6 @@ public class SplashScreen extends Activity
 				first = true;
 			}
 			
-			Log.d("kinix","level"+level);
 
 			if (!internet && level < 3)
 			{
@@ -93,7 +91,7 @@ public class SplashScreen extends Activity
 			case 1:
 				textView.setText("The map is downloading.");
 				init = getSharedPreferences("init", 0);
-				Long downloadID = Download.downloadFile(activity, "http://sw2.obcdn.net/api/map", "map.zip");
+				Long downloadID = Download.downloadFile(activity, "http://sw2.obcdn.net/api/map", "map.zip", "24Istanbul", "The map is downloading.");
 				editor = init.edit();
 				editor.putLong("downloadID", downloadID);
 				editor.commit();
@@ -219,7 +217,8 @@ public class SplashScreen extends Activity
 
 		private boolean downloadComplated()
 		{
-			if (downloadID == null)
+
+			if (downloadID == 0)
 			{
 				SharedPreferences init = getSharedPreferences("init", 0);
 				downloadID = init.getLong("downloadID", 0);
@@ -228,7 +227,6 @@ public class SplashScreen extends Activity
 			DownloadManager manager = (DownloadManager) getSystemService(Context.DOWNLOAD_SERVICE);
 			DownloadManager.Query query = new DownloadManager.Query();
 			Cursor c = manager.query(query);
-
 			int status;
 
 			if (c.moveToFirst())
