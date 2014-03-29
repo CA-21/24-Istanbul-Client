@@ -7,7 +7,7 @@ package killerapp.istanbul24;
  * TODO Ask the user to download the map if it doesn't exist.
  * TODO Decide if shortestPathRunning is necessary; will there be a re-routing feature?
  * TODO Decide if the map files will be loaded the during the "questions" phase. 
- * TODO Test on other Android versions.
+ * TODO Add zoom out limit.
  * * * * * *
  */
 
@@ -17,6 +17,7 @@ import java.util.List;
 
 import org.mapsforge.android.maps.MapActivity;
 import org.mapsforge.android.maps.MapView;
+import org.mapsforge.android.maps.MapZoomControls;
 import org.mapsforge.android.maps.overlay.ListOverlay;
 import org.mapsforge.android.maps.overlay.Marker;
 import org.mapsforge.android.maps.overlay.PolygonalChain;
@@ -25,6 +26,7 @@ import org.mapsforge.core.model.GeoPoint;
 import org.mapsforge.map.reader.header.FileOpenResult;
 
 import android.content.Intent;
+import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.DashPathEffect;
 import android.graphics.Paint;
@@ -34,14 +36,17 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
+import android.view.GestureDetector;
+import android.view.GestureDetector.SimpleOnGestureListener;
+import android.view.MotionEvent;
 import android.view.Window;
 import android.widget.Toast;
 
 import com.graphhopper.GHRequest;
 import com.graphhopper.GHResponse;
+import com.graphhopper.GraphHopper;
 import com.graphhopper.GraphHopperAPI;
 import com.graphhopper.android.GHAsyncTask;
-import com.graphhopper.GraphHopper;
 import com.graphhopper.storage.Graph;
 import com.graphhopper.util.Constants;
 import com.graphhopper.util.PointList;
@@ -50,29 +55,79 @@ import com.graphhopper.util.StopWatch;
 public class RouteActivity extends MapActivity
 {
 
-	private MapView					mapView;
-	private volatile GraphHopperAPI	hopper;
-	private volatile GeoPoint		start;
-	private volatile GeoPoint		end;
-	private static final String		CURRENT_AREA		= "istanbul";
+	private MapView mapView;
+	private GraphHopperAPI hopper;
+	private GeoPoint start;
+	private GeoPoint end;
+	private static final String CURRENT_AREA = "istanbul";
 
-	private ListOverlay				pathOverlay			= new ListOverlay();
+	private ListOverlay pathOverlay = new ListOverlay();
 
 	// private volatile boolean shortestPathRunning = false;
-	private volatile boolean		prepareInProgress	= false;
-	private static final boolean	DEBUG				= false;
+	private volatile boolean prepareInProgress = false;
+	private static final boolean DEBUG = false;
 
-	private File					mapFolder;
-	private String					mapFile;
+	private File mapFolder;
+	private String mapFile;
+
+	private SimpleOnGestureListener listener = new SimpleOnGestureListener()
+	{
+		@Override
+		public boolean onSingleTapConfirmed(MotionEvent motionEvent)
+		{
+			/*
+			 * String str = mapView.getMapViewPosition().moveCenter(arg0, arg1);
+			 * + " " + mapView.getScrollY(); log(str); logUser(str);
+			 */
+
+			return true;
+		}
+	};
+
+	private GestureDetector gestureDetector;
 
 	protected void onCreate(Bundle savedInstanceState)
 	{
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		super.onCreate(savedInstanceState);
 
-		mapView = new MapView(this);
+		mapView = new MapView(this)
+		{
+			
+//			@Override
+//			public boolean onTouchEvent(MotionEvent event)
+//			{
+//				
+//				if (gestureDetector.onTouchEvent(event))
+//				{
+//					return true;
+//				}
+//				
+//				return super.onTouchEvent(event);
+//				
+//				return true;
+//			}
+//			
+		};
+		
 		mapView.setClickable(true);
 		mapView.setBuiltInZoomControls(true);
+
+		log("Zoom levels: " + mapView.getMapZoomControls().getZoomLevelMin()
+				+ ", " + mapView.getMapZoomControls().getZoomLevelMax() + ", "
+				+ mapView.getMapZoomControls().getZoomControlsGravity());
+
+		if (mapView.getMapZoomControls().isShowMapZoomControls())
+		{
+			mapView.getMapZoomControls().setZoomLevelMin((byte) 2);
+			mapView.getMapZoomControls().setZoomLevelMax((byte) 20);
+
+		}
+
+		log("Zoom levels: " + mapView.getMapZoomControls().getZoomLevelMin()
+				+ ", " + mapView.getMapZoomControls().getZoomLevelMax());
+
+		gestureDetector = new GestureDetector(this, listener);
 
 		// Load the map
 		mapFolder = new File(Environment.getExternalStorageDirectory(),
@@ -118,7 +173,6 @@ public class RouteActivity extends MapActivity
 			calcPath(start.latitude, start.longitude, end.latitude,
 					end.longitude);
 		}
-
 	}
 
 	private Marker createMarker(GeoPoint p, int resource)
@@ -134,7 +188,7 @@ public class RouteActivity extends MapActivity
 		log("calculating path ...");
 		new AsyncTask<Void, Void, GHResponse>()
 		{
-			float	time;
+			float time;
 
 			protected GHResponse doInBackground(Void... v)
 			{
@@ -178,6 +232,9 @@ public class RouteActivity extends MapActivity
 					toastText += (DEBUG) ? ", debug:" + time : "";
 
 					logUser(toastText);
+
+					// center using the start point
+					mapView.getMapViewPosition().setCenter(start);
 
 					pathOverlay.getOverlayItems().add(createPolyline(resp));
 					mapView.redraw();
