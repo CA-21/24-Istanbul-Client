@@ -43,11 +43,7 @@ public class MainActivity extends Activity
 		startActivity(intent);	// Activity is created.
 	}
 	
-	public void downloadDemo(View view)
-	{
-		Download.downloadFile(this, "http://sw2.obcdn.net/api/map", "map.zip");
-	}
-	
+
 	public void routeDemo(View view)
 	{
 		// If can't unzip and can't find the map directory, stop

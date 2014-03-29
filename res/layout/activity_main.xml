@@ -14,13 +14,6 @@
         android:onClick="startDemo"
         android:text="Question Demo" />
 
-    <Button
-        android:id="@+id/downloadButton"
-        android:layout_width="fill_parent"
-        android:layout_height="0dp"
-        android:layout_weight="0.2"
-        android:onClick="downloadDemo"
-        android:text="Download Demo" />
     
     <Button
         android:id="@+id/routeButton"

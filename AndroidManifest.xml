@@ -7,17 +7,18 @@
     <uses-sdk
         android:minSdkVersion="10"
         android:targetSdkVersion="19" />
-    <uses-permission android:name="android.permission.INTERNET"/>
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme" >
+        android:theme="@android:style/Theme.Light.NoTitleBar" >
         <activity
-            android:name="killerapp.istanbul24.MainActivity"
+            android:name="killerapp.istanbul24.SplashScreen"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -25,19 +26,23 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+                <activity
+            android:name="killerapp.istanbul24.MainActivity"
+            android:label="@string/app_name" >
+        </activity>
         <activity
             android:name="killerapp.istanbul24.QuestionActivity"
-            android:label="@string/app_name"
-            android:parentActivityName="com.example.myfirstapp.MainActivity" >
+            android:label="@string/app_name" >
         </activity>
         <activity
             android:name="killerapp.istanbul24.ResultActivity"
-            android:label="@string/title_activity_result" >
+            android:label="@string/app_name" >
         </activity>
         <activity
             android:name="killerapp.istanbul24.RouteActivity"
             android:label="@string/app_name" >
         </activity>
+
     </application>
 
 </manifest>

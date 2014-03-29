@@ -39,9 +39,9 @@ import android.widget.Toast;
 
 import com.graphhopper.GHRequest;
 import com.graphhopper.GHResponse;
+import com.graphhopper.GraphHopper;
 import com.graphhopper.GraphHopperAPI;
 import com.graphhopper.android.GHAsyncTask;
-import com.graphhopper.GraphHopper;
 import com.graphhopper.storage.Graph;
 import com.graphhopper.util.Constants;
 import com.graphhopper.util.PointList;
