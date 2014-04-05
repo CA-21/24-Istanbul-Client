@@ -4,13 +4,13 @@ public final class VenueMeta
 {
 	private int id;
 	private int tagId;
-	private int categoryId;
+	private String venueId;
 
-	public VenueMeta(int id, int tagId, int categoryId)
+	public VenueMeta(int id, int tagId, String venueId)
 	{
 		this.id = id;
 		this.tagId = tagId;
-		this.categoryId = categoryId;
+		this.venueId = venueId;
 	}
 
 	public int getId()
@@ -33,13 +33,13 @@ public final class VenueMeta
 		this.tagId = tagId;
 	}
 
-	public int getCategoryId()
+	public String getVenueId()
 	{
-		return categoryId;
+		return venueId;
 	}
 
-	public void setCategoryId(int categoryId)
+	public void setVenueId(String venueId)
 	{
-		this.categoryId = categoryId;
+		this.venueId = venueId;
 	}
 }

@@ -2,7 +2,7 @@ package killerapp.istanbul24.db;
 
 public final class Venue
 {
-	private int id;
+	private String id;
 	private String address;
 	private String name;
 	private double longitude;
@@ -10,7 +10,7 @@ public final class Venue
 	private String lastUpdateDate;
 	private double rating;
 	
-	public Venue(int id, String address, String name, double longitude,
+	public Venue(String id, String address, String name, double longitude,
 			double latitude, String lastUpdateDate, double rating)
 	{
 		this.id = id;
@@ -22,12 +22,12 @@ public final class Venue
 		this.rating = rating;
 	}
 
-	public int getId()
+	public String getId()
 	{
 		return id;
 	}
 
-	public void setId(int id)
+	public void setId(String id)
 	{
 		this.id = id;
 	}
