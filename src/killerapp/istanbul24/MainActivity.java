@@ -42,7 +42,6 @@ public class MainActivity extends Activity
 		intent.putParcelableArrayListExtra("places", places);
 		startActivity(intent);	// Activity is created.
 	}
-	
 
 	public void routeDemo(View view)
 	{
@@ -55,13 +54,28 @@ public class MainActivity extends Activity
 		}
 		else
 			Download.deleteZip();
-		
+		/*
 		GeoPoint start = new GeoPoint(41.02546548103654, 28.968420743942254);
 		GeoPoint end = new GeoPoint(41.011898495994, 28.97524428367614);
+		*/
+		
+		GeoPoint start = new GeoPoint(41.0119,28.925972);
+		GeoPoint end = new GeoPoint(41.01177,29.013519);
 		
 		Intent intent = new Intent(this, RouteActivity.class);
 		intent.putExtra("start", start);
 		intent.putExtra("end", end);
+		startActivity(intent);
+		
+	}
+	
+	public void shareDemo(View view)
+	{
+		Intent intent = new Intent(Intent.ACTION_SEND);
+		intent.setType("text/plain");
+		intent.putExtra(Intent.EXTRA_TEXT, "I found this awesome place with 24Istanbul.");
+		
+		//startActivity(Intent.createChooser(fbIntent(), "Share with"));
 		startActivity(intent);
 	}
 
