@@ -8,10 +8,9 @@ public final class Venue
 	private double longitude;
 	private double latitude;
 	private String lastUpdateDate;
-	private double rating;
 	
 	public Venue(String id, String address, String name, double longitude,
-			double latitude, String lastUpdateDate, double rating)
+			double latitude, String lastUpdateDate)
 	{
 		this.id = id;
 		this.address = address;
@@ -19,7 +18,6 @@ public final class Venue
 		this.longitude = longitude;
 		this.latitude = latitude;
 		this.lastUpdateDate = lastUpdateDate;
-		this.rating = rating;
 	}
 
 	public String getId()
@@ -80,15 +78,5 @@ public final class Venue
 	public void setLastUpdateDate(String lastUpdateDate)
 	{
 		this.lastUpdateDate = lastUpdateDate;
-	}
-
-	public double getRating()
-	{
-		return rating;
-	}
-
-	public void setRating(double rating)
-	{
-		this.rating = rating;
 	}
 }
