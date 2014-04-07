@@ -1,6 +1,18 @@
 package killerapp.istanbul24;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.concurrent.ExecutionException;
+
+import killerapp.istanbul24.db.DatabaseHelper;
+
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -12,11 +24,14 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
+import android.util.Log;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class SplashScreen extends Activity
 {
@@ -25,6 +40,7 @@ public class SplashScreen extends Activity
 	Activity activity;
 	Handler handler;
 	boolean unzipped = false;
+	DatabaseHelper db;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
@@ -142,12 +158,49 @@ public class SplashScreen extends Activity
 				level++;
 				break;
 			case 5:
+				if (first)
+				{
+					textView.setText("Downloading POIs...");
+					first = false;
+				}
+				
+				if (db == null)
+					db = new DatabaseHelper(activity);
+
+				String poiJsonResult = null;
+				String questionJsonResult = null;
+				try
+				{
+					
+					poiJsonResult = new HttpAsyncTask().execute(
+							"http://sw2.obcdn.net/api/poi/all.json").get();
+					questionJsonResult = new HttpAsyncTask().execute(
+							"http://sw2.obcdn.net/api/question/all.json").get();
+				}
+				catch (InterruptedException e)
+				{
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				catch (ExecutionException e)
+				{
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+
+				JSONParser.parsePois(poiJsonResult, db);
+				JSONParser.parseQuestions(questionJsonResult, db);
+				
+				first = true;
+				level++;
+				break;
+			case 6:
 				textView.setText("Completed.");
 				level++;
 				break;
 			}
 
-			if (level < 6)
+			if (level < 7)
 				handler.postDelayed(this, 1000);
 			else
 			{
@@ -278,6 +331,69 @@ public class SplashScreen extends Activity
 					haveConnectedMobile = true;
 		}
 		return haveConnectedWifi || haveConnectedMobile;
+	}
+	
+	private class HttpAsyncTask extends AsyncTask<String, Void, String>
+	{
+		@Override
+		protected String doInBackground(String... urls)
+		{
+
+			return GET(urls[0]);
+		}
+
+		// onPostExecute displays the results of the AsyncTask.
+		@Override
+		protected void onPostExecute(String result)
+		{
+			Log.d("JSON", result);
+		}
+	}
+
+	public static String GET(String url)
+	{
+		InputStream inputStream = null;
+		String result = "";
+		try
+		{
+
+			// create HttpClient
+			HttpClient httpclient = new DefaultHttpClient();
+
+			// make GET request to the given URL
+			HttpResponse httpResponse = httpclient.execute(new HttpGet(url));
+
+			// receive response as inputStream
+			inputStream = httpResponse.getEntity().getContent();
+
+			// convert inputstream to string
+			if (inputStream != null)
+				result = convertInputStreamToString(inputStream);
+			else
+				result = "Did not work!";
+
+		}
+		catch (Exception e)
+		{
+			Log.d("InputStream", e.getLocalizedMessage());
+		}
+
+		return result;
+	}
+
+	private static String convertInputStreamToString(InputStream inputStream)
+			throws IOException
+	{
+		BufferedReader bufferedReader = new BufferedReader(
+				new InputStreamReader(inputStream));
+		String line = "";
+		String result = "";
+		while ((line = bufferedReader.readLine()) != null)
+			result += line;
+
+		inputStream.close();
+		return result;
+
 	}
 
 }

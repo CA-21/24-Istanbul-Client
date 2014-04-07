@@ -12,6 +12,11 @@ public final class Tag
 		this.categoryId = categoryId;
 		this.name = name;
 	}
+	
+	public Tag(int categoryId, String name)
+	{
+		this(-1, categoryId, name);
+	}
 
 	public int getId()
 	{

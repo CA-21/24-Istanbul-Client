@@ -12,6 +12,11 @@ public final class Question
 		this.question = question;
 		this.lastUpdateDate = lastUpdateDate;
 	}
+	
+	public Question(String question, String lastUpdatedate)
+	{
+		this(-1, question, lastUpdatedate);
+	}
 
 	public int getId()
 	{

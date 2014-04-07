@@ -2,9 +2,9 @@ package killerapp.istanbul24.db;
 
 /* * * * * * 
  * DatabaseHelper
- * v0.2
+ * v0.3
  * -----
- * TODO Write better code, combine methods.
+ * TODO Write better code; DAO factory.
  * * * * * *
  */
 
@@ -29,7 +29,7 @@ public class DatabaseHelper extends SQLiteOpenHelper
 	private static final String TABLE_CATEGORY = "categories";
 	private static final String TABLE_TAG = "tags";
 	private static final String TABLE_OPTION = "options";
-	private static final String TABLE_VENUE_META = "venue_metas";
+	private static final String TABLE_VENUE_META = "venue_meta";
 
 	// Common columns
 	private static final String KEY_ID = "id";
@@ -59,33 +59,34 @@ public class DatabaseHelper extends SQLiteOpenHelper
 	// VENUE_METAS Table - columns
 	// all defined in common columns
 
+	// INTEGER PRIMARY KEY fields are automatically incremented in SQLite
 	private static final String CREATE_TABLE_CATEGORY = "CREATE TABLE IF NOT EXISTS categories ("
-			+ "id TINYINT(4) PRIMARY KEY NOT NULL AUTO_INCREMENT,"
+			+ "id INTEGER PRIMARY KEY,"
 			+ "name VARCHAR(32) NOT NULL,"
-			+ "lastUpdateDate DATE NOT NULL"
-			+ ");";
+			+ "lastUpdateDate DATE NOT NULL" + ");";
 
 	private static final String CREATE_TABLE_OPTION = "CREATE TABLE IF NOT EXISTS options ("
-			+ "id TINYINT(4) PRIMARY KEY NOT NULL AUTO_INCREMENT,"
-			+ "questionId TINYINT(4) unsigned NOT NULL,"
+			+ "id INTEGER PRIMARY KEY,"
+			+ "questionId TINYINT(4) NOT NULL,"
 			+ "name VARCHAR(64) NOT NULL,"
 			+ "tagId TINYINT(4) NOT NULL,"
 			+ "FOREIGN KEY(tagId) REFERENCES tags(id),"
-			+ "FOREIGN KEY(questionId) REFERENCES questions(id)," + ");";
+			+ "FOREIGN KEY(questionId) REFERENCES questions(id)" + ");";
 
 	private static final String CREATE_TABLE_QUESTION = "CREATE TABLE IF NOT EXISTS questions ("
-			+ "id TINYINT(4) PRIMARY KEY NOT NULL AUTO_INCREMENT,"
+			+ "id INTEGER PRIMARY KEY,"
 			+ "question VARCHAR(255) NOT NULL,"
-			+ "lastUpdateDate DATE NOT NULL," + ");";
+			+ "lastUpdateDate DATE NOT NULL" + ");";
 
-	private static final String CREATE_TABLE_TAG = "CREATE TABLE IF NOT EXISTS questions ("
-			+ "id TINYINT(4) PRIMARY KEY NOT NULL AUTO_INCREMENT,"
+	private static final String CREATE_TABLE_TAG = "CREATE TABLE IF NOT EXISTS tags ("
+			+ "id INTEGER PRIMARY KEY,"
 			+ "name VARCHAR(32) NOT NULL,"
-			+ "categoryId TINYINT(4) NOT NULL,"
+			+ "categoryId TINYINT(4) NOT NULL"
+			+ "FOREIGN KEY(categoryId) REFERENCES categories(id)"
 			+ ");";
 
 	private static final String CREATE_TABLE_VENUE = "CREATE TABLE IF NOT EXISTS venues ("
-			+ "id VARCHAR(36) PRIMARY KEY NOT NULL AUTO_INCREMENT,"
+			+ "id VARCHAR(36) PRIMARY KEY NOT NULL,"
 			+ "name VARCHAR(255) NOT NULL,"
 			+ "latitude FLOAT(10,6) NOT NULL,"
 			+ "longitude FLOAT(10,6) NOT NULL,"
@@ -93,12 +94,12 @@ public class DatabaseHelper extends SQLiteOpenHelper
 			+ "address VARCHAR(255) DEFAULT NULL" + ");";
 
 	private static final String CREATE_TABLE_VENUE_META = "CREATE TABLE IF NOT EXISTS venue_meta ("
-			+ "id INT(11) PRIMARY KEY NOT NULL AUTO_INCREMENT,"
+			+ "id INTEGER PRIMARY KEY,"
 			+ "venueId VARCHAR(36) NOT NULL,"
 			+ "tagId TINYINT(4) NOT NULL,"
 			+ "FOREIGN KEY(venueId) REFERENCES venues(id),"
 			+ "FOREIGN KEY(tagId) REFERENCES tags(id)" + ");";
-	
+
 	public DatabaseHelper(Context context, CursorFactory factory)
 	{
 		super(context, DATABASE_NAME, factory, DATABASE_VERSION);
@@ -115,7 +116,6 @@ public class DatabaseHelper extends SQLiteOpenHelper
 		SQLiteDatabase db = this.getWritableDatabase();
 
 		ContentValues values = new ContentValues();
-		values.put("id", arg.getId());
 		values.put("name", arg.getName());
 		values.put("lastUpdateDate", arg.getLastUpdateDate());
 
@@ -127,7 +127,6 @@ public class DatabaseHelper extends SQLiteOpenHelper
 		SQLiteDatabase db = this.getWritableDatabase();
 
 		ContentValues values = new ContentValues();
-		values.put(KEY_ID, arg.getId());
 		values.put(KEY_QUESTION_ID, arg.getQuestionId());
 		values.put(KEY_NAME, arg.getName());
 		values.put(KEY_TAG_ID, arg.getTagId());
@@ -140,7 +139,6 @@ public class DatabaseHelper extends SQLiteOpenHelper
 		SQLiteDatabase db = this.getWritableDatabase();
 
 		ContentValues values = new ContentValues();
-		values.put(KEY_ID, arg.getId());
 		values.put(KEY_QUESTION, arg.getQuestion());
 		values.put(KEY_LAST_UPDATE_DATE, arg.getLastUpdateDate());
 
@@ -152,7 +150,6 @@ public class DatabaseHelper extends SQLiteOpenHelper
 		SQLiteDatabase db = this.getWritableDatabase();
 
 		ContentValues values = new ContentValues();
-		values.put(KEY_ID, arg.getId());
 		values.put(KEY_NAME, arg.getName());
 		values.put(KEY_CATEGORY_ID, arg.getCategoryId());
 
@@ -179,7 +176,6 @@ public class DatabaseHelper extends SQLiteOpenHelper
 		SQLiteDatabase db = this.getWritableDatabase();
 
 		ContentValues values = new ContentValues();
-		values.put(KEY_ID, arg.getId());
 		values.put(KEY_VENUE_ID, arg.getVenueId());
 		values.put(KEY_TAG_ID, arg.getTagId());
 
@@ -264,7 +260,7 @@ public class DatabaseHelper extends SQLiteOpenHelper
 		SQLiteDatabase db = this.getReadableDatabase();
 
 		String selectQuery = "SELECT  * FROM " + TABLE_VENUE + " WHERE "
-				+ KEY_ID + " = " + id;
+				+ KEY_ID + " = '" + id + "'";
 
 		Cursor c = db.rawQuery(selectQuery, null);
 
@@ -296,6 +292,24 @@ public class DatabaseHelper extends SQLiteOpenHelper
 				.getColumnIndex(KEY_VENUE_ID)));
 	}
 
+	public VenueMeta getVenueMeta(int tagId, String venueId)
+	{
+		SQLiteDatabase db = this.getReadableDatabase();
+
+		String selectQuery = "SELECT  * FROM " + TABLE_VENUE_META + " WHERE "
+				+ KEY_TAG_ID + " = " + tagId + " AND " + KEY_VENUE_ID + " = '"
+				+ venueId + "'";
+
+		Cursor c = db.rawQuery(selectQuery, null);
+
+		if (c != null)
+			c.moveToFirst();
+
+		return new VenueMeta(c.getInt(c.getColumnIndex(KEY_ID)), c.getInt(c
+				.getColumnIndex(KEY_TAG_ID)), c.getString(c
+				.getColumnIndex(KEY_VENUE_ID)));
+	}
+	
 	// READ methods - end
 
 	// UPDATE methods
@@ -443,6 +457,7 @@ public class DatabaseHelper extends SQLiteOpenHelper
 		db.execSQL("DROP TABLE IF EXISTS " + TABLE_TAG);
 		db.execSQL("DROP TABLE IF EXISTS " + TABLE_VENUE);
 		db.execSQL("DROP TABLE IF EXISTS " + TABLE_VENUE_META);
+		db.execSQL("DROP TABLE IF EXISTS venue_metas");
+		onCreate(db);
 	}
-
 }

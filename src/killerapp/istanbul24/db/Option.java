@@ -14,6 +14,11 @@ public final class Option
 		this.tagId = tagId;
 		this.name = name;
 	}
+	
+	public Option(int questionId, int tagId, String name)
+	{
+		this(-1, questionId, tagId, name);
+	}
 
 	public int getId()
 	{

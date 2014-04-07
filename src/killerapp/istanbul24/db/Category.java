@@ -12,6 +12,11 @@ public final class Category
 		this.name = name;
 		this.lastUpdateDate = lastUpdateDate;
 	}
+	
+	public Category(String name, String lastUpdateDate)
+	{
+		this(-1, name, lastUpdateDate);
+	}
 
 	public int getId()
 	{
