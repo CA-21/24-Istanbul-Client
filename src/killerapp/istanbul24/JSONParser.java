@@ -25,7 +25,7 @@ public class JSONParser
 
 	public static void parsePois(String str, DatabaseHelper dbHelper)
 	{
-		assert (dbHelper != null);
+	//	assert (dbHelper != null);
 
 		try
 		{
@@ -118,7 +118,7 @@ public class JSONParser
 
 	public static void parseQuestions(String str, DatabaseHelper dbHelper)
 	{
-		assert (dbHelper != null);
+		//assert (dbHelper != null);
 		
 		try
 		{
@@ -150,7 +150,7 @@ public class JSONParser
 				if (exQuestion == null)
 				{
 					dbHelper.createQuestion(new Question(question.getString("question"), 
-							question.getString("lastUpdateName")));
+							question.getString("update_date")));
 				}
 				else
 				{
@@ -170,7 +170,7 @@ public class JSONParser
 					if (dateNew.after(dateOld))
 					{
 						dbHelper.updateQuestion(new Question(question.getString("question"), 
-								question.getString("lastUpdateName")));
+								question.getString("update_date")));
 					}
 				}
 				
@@ -191,8 +191,18 @@ public class JSONParser
 						Log.d("24Istanbul-DB", e.getMessage());
 					}
 					
+					int tagId;
+					try
+					{
+						tagId = option.getInt("tag");
+					}
+					catch (Exception e)
+					{
+						tagId = -1;
+					}
+					
 					if (exOption == null)
-						dbHelper.createOption(new Option(option.getInt("questionId"), option.getInt("tagId"), option.getString("name")));
+						dbHelper.createOption(new Option(question.getInt("id"), tagId, option.getString("text")));
 					else
 						Log.d("24Istanbul-DB", "Option already exists.");
 				}
@@ -205,6 +215,11 @@ public class JSONParser
 			e.printStackTrace();
 		}
 		
+	}
+
+	public static void parseCategories(String str, DatabaseHelper dbHelper)
+	{
+
 	}
 
 }

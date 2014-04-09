@@ -2,6 +2,9 @@ package killerapp.istanbul24;
 
 import java.util.ArrayList;
 
+import killerapp.istanbul24.db.DatabaseHelper;
+import killerapp.istanbul24.db.Venue;
+
 import org.mapsforge.core.model.GeoPoint;
 
 import android.app.Activity;
@@ -33,13 +36,13 @@ public class MainActivity extends Activity
 		// TODO: Tags of nearest POIs will retrieved from database.
 		
 		ArrayList<Integer> selected = new ArrayList<Integer>(); // It is empty. Selected tags will add into this.
-		ArrayList<Place> places = new ArrayList<Place>();	// It is empty. Places will add into this.
+		ArrayList<Venue> venues = new ArrayList<Venue>();	// It is empty. Places will add into this.
 		
 		Intent intent = new Intent(this, QuestionActivity.class);	// Intent is created.
 		intent.putExtra("list", list);
 		intent.putExtra("selected", selected);
 		intent.putExtra("question", 0);
-		intent.putParcelableArrayListExtra("places", places);
+		intent.putParcelableArrayListExtra("venues", venues);
 		startActivity(intent);	// Activity is created.
 	}
 

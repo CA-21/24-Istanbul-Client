@@ -8,12 +8,19 @@ package killerapp.istanbul24.db;
  * * * * * *
  */
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.ArrayList;
+
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteDatabase.CursorFactory;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.os.Environment;
 
 public class DatabaseHelper extends SQLiteOpenHelper
 {
@@ -81,7 +88,7 @@ public class DatabaseHelper extends SQLiteOpenHelper
 	private static final String CREATE_TABLE_TAG = "CREATE TABLE IF NOT EXISTS tags ("
 			+ "id INTEGER PRIMARY KEY,"
 			+ "name VARCHAR(32) NOT NULL,"
-			+ "categoryId TINYINT(4) NOT NULL"
+			+ "categoryId TINYINT(4) NOT NULL,"
 			+ "FOREIGN KEY(categoryId) REFERENCES categories(id)"
 			+ ");";
 
@@ -219,6 +226,30 @@ public class DatabaseHelper extends SQLiteOpenHelper
 				.getColumnIndex(KEY_QUESTION_ID)), c.getInt(c
 				.getColumnIndex(KEY_TAG_ID)), c.getString(c
 				.getColumnIndex(KEY_NAME)));
+	}
+	
+	public ArrayList<Option> getOptions(int questionId)
+	{
+		SQLiteDatabase db = this.getReadableDatabase();
+
+		String selectQuery = "SELECT  * FROM " + TABLE_OPTION + " WHERE "
+				+ KEY_ID + " = " + questionId;
+
+		Cursor c = db.rawQuery(selectQuery, null);
+
+		ArrayList<Option> list = new ArrayList<Option>();
+		if (c != null)
+		{
+			while (c.moveToNext())
+				list.add(new Option(c.getInt(c.getColumnIndex(KEY_ID)), c
+						.getInt(c.getColumnIndex(KEY_QUESTION_ID)), c.getInt(c
+						.getColumnIndex(KEY_TAG_ID)), c.getString(c
+						.getColumnIndex(KEY_NAME))));
+		}
+
+		c.close();
+		
+		return list;
 	}
 
 	public Question getQuestion(int id)
@@ -437,6 +468,36 @@ public class DatabaseHelper extends SQLiteOpenHelper
 
 	// DELETE methods - end
 
+	public boolean exportDB()
+	{
+		try
+		{
+			FileInputStream fis = new FileInputStream(new File(Environment.getDataDirectory() + "/data/killerapp.istanbul24/databases/24Istanbul-db"));
+			File file = new File(Environment.getExternalStorageDirectory() + "/24Istanbul-db.sqlite");
+			if (!file.exists())
+				file.createNewFile();
+			FileOutputStream fos = new FileOutputStream(file);
+
+			int data;
+			while ((data = fis.read()) != -1)
+			{
+				fos.write(data);
+			}
+
+			fis.close();
+			fos.close();
+			
+			return true;
+		}
+		catch (IOException e)
+		{
+			System.out.println(e);
+			e.printStackTrace();
+		}
+
+		return false;
+	}
+	
 	@Override
 	public void onCreate(SQLiteDatabase db)
 	{

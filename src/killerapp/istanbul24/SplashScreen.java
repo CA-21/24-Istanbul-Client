@@ -346,7 +346,7 @@ public class SplashScreen extends Activity
 		@Override
 		protected void onPostExecute(String result)
 		{
-			Log.d("JSON", result);
+			//Log.d("JSON", result);
 		}
 	}
 

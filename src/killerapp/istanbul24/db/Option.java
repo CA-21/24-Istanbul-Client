@@ -19,6 +19,10 @@ public final class Option
 	{
 		this(-1, questionId, tagId, name);
 	}
+	public Option(int questionId, String name)
+	{
+		this(-1, questionId, -1, name);
+	}
 
 	public int getId()
 	{

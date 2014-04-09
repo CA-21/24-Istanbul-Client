@@ -1,6 +1,9 @@
 package killerapp.istanbul24.db;
 
-public final class Venue
+import android.os.Parcel;
+import android.os.Parcelable;
+
+public final class Venue implements Parcelable
 {
 	private String id;
 	private String address;
@@ -78,5 +81,19 @@ public final class Venue
 	public void setLastUpdateDate(String lastUpdateDate)
 	{
 		this.lastUpdateDate = lastUpdateDate;
+	}
+
+	@Override
+	public int describeContents()
+	{
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public void writeToParcel(Parcel dest, int flags)
+	{
+		// TODO Auto-generated method stub
+		
 	}
 }
