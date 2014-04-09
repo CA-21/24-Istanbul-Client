@@ -22,6 +22,9 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
@@ -31,7 +34,6 @@ import android.os.Handler;
 import android.util.Log;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 public class SplashScreen extends Activity
 {
@@ -40,7 +42,15 @@ public class SplashScreen extends Activity
 	Activity activity;
 	Handler handler;
 	boolean unzipped = false;
+	Location location = null;
+	Intent myIntent;
 	DatabaseHelper db;
+
+	double longitude = 0;
+	double latitude = 0;
+	
+	private static final long MIN_DISTANCE_CHANGE_FOR_UPDATES = 10; // 10 meters
+    private static final long MIN_TIME_BW_UPDATES = 1000 * 60 * 1; // 1 minute
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
@@ -60,7 +70,7 @@ public class SplashScreen extends Activity
 		handler.postDelayed(new taskController(), 1000);
 	}
 
-	private class taskController extends Thread
+	private class taskController extends Thread implements LocationListener
 	{
 		int level = 0;
 		boolean first;
@@ -78,7 +88,6 @@ public class SplashScreen extends Activity
 				init();
 				first = true;
 			}
-			
 
 			if (!internet && level < 3)
 			{
@@ -92,13 +101,14 @@ public class SplashScreen extends Activity
 								System.exit(0);
 							}
 						}).show();
-				
-				return ;
+
+				return;
 			}
-			
-			if(level == 4)
+
+			if (level == 4)
 			{
-				if(!internet ||System.currentTimeMillis()/1000L - lastUpdate < 86400)	// 24 hours
+				// TODO: check this
+				if (!internet || System.currentTimeMillis() / 1000L - lastUpdate < 86400) // 24hours
 					level++;
 			}
 
@@ -147,13 +157,12 @@ public class SplashScreen extends Activity
 					textView.setText("Database is updating.");
 					first = false;
 				}
-				// TODO: update database
-				
+
 				init = getSharedPreferences("init", 0);
 				editor = init.edit();
-				editor.putLong("lastUpdate", System.currentTimeMillis()/1000L);
+				editor.putLong("lastUpdate", System.currentTimeMillis() / 1000L);
 				editor.commit();
-				
+
 				first = true;
 				level++;
 				break;
@@ -163,7 +172,7 @@ public class SplashScreen extends Activity
 					textView.setText("Downloading POIs...");
 					first = false;
 				}
-				
+
 				if (db == null)
 					db = new DatabaseHelper(activity);
 
@@ -171,7 +180,7 @@ public class SplashScreen extends Activity
 				String questionJsonResult = null;
 				try
 				{
-					
+
 					poiJsonResult = new HttpAsyncTask().execute(
 							"http://sw2.obcdn.net/api/poi/all.json").get();
 					questionJsonResult = new HttpAsyncTask().execute(
@@ -179,24 +188,97 @@ public class SplashScreen extends Activity
 				}
 				catch (InterruptedException e)
 				{
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 				catch (ExecutionException e)
 				{
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 
 				JSONParser.parsePois(poiJsonResult, db);
 				JSONParser.parseQuestions(questionJsonResult, db);
-				
+
 				first = true;
 				level++;
 				break;
 			case 6:
-				textView.setText("Completed.");
-				level++;
+				if (first)
+				{
+					textView.setText("Location data is retrieving.");
+					first = false;
+
+					myIntent = new Intent(activity, MainActivity.class);
+
+					LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+					boolean isGPSEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+					boolean isNetworkEnabled = locationManager
+							.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+
+					if (!isGPSEnabled && !isNetworkEnabled)
+					{
+						new AlertDialog.Builder(activity)
+								.setTitle("Warning")
+								.setMessage("24Istanbul requires GPS service or any network connection to determine your location.")
+								.setNeutralButton("OK", new DialogInterface.OnClickListener()
+								{
+									public void onClick(DialogInterface dialog, int which)
+									{
+										System.exit(0);
+									}
+								}).show();
+					}
+					else
+					{
+						if (isNetworkEnabled)
+						{
+							locationManager.requestLocationUpdates(
+									LocationManager.NETWORK_PROVIDER,
+									MIN_TIME_BW_UPDATES,
+									MIN_DISTANCE_CHANGE_FOR_UPDATES, this);
+							Log.d("Network", "Network Enabled");
+							if (locationManager != null)
+							{
+								location = locationManager
+										.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+								if (location != null)
+								{
+									latitude = location.getLatitude();
+									longitude = location.getLongitude();
+								}
+							}
+						}
+
+						if (isGPSEnabled)
+						{
+							if (location == null)
+							{
+								locationManager.requestLocationUpdates(
+										LocationManager.GPS_PROVIDER,
+										MIN_TIME_BW_UPDATES,
+										MIN_DISTANCE_CHANGE_FOR_UPDATES, this);
+								Log.d("GPS", "GPS Enabled");
+								if (locationManager != null)
+								{
+									location = locationManager
+											.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+									if (location != null)
+									{
+										latitude = location.getLatitude();
+										longitude = location.getLongitude();
+									}
+								}
+							}
+						}
+					}
+
+				}
+
+				if (location != null)
+				{
+					myIntent.putExtra("long", longitude);
+					myIntent.putExtra("lat", latitude);
+					level++;
+				}
 				break;
 			}
 
@@ -204,7 +286,6 @@ public class SplashScreen extends Activity
 				handler.postDelayed(this, 1000);
 			else
 			{
-				Intent myIntent = new Intent(activity, MainActivity.class);
 				startActivityForResult(myIntent, 0);
 				finish();
 			}
@@ -213,7 +294,7 @@ public class SplashScreen extends Activity
 		private void init()
 		{
 			internet = isInternetAvailable();
-			
+
 			SharedPreferences init = getSharedPreferences("init", 0);
 			downloadID = init.getLong("downloadID", 0);
 			lastUpdate = init.getLong("lastUpdate", 0);
@@ -312,6 +393,26 @@ public class SplashScreen extends Activity
 				unzipped = true;
 			}
 		}
+
+		@Override
+		public void onLocationChanged(Location arg0)
+		{
+		}
+
+		@Override
+		public void onProviderDisabled(String arg0)
+		{
+		}
+
+		@Override
+		public void onProviderEnabled(String arg0)
+		{
+		}
+
+		@Override
+		public void onStatusChanged(String arg0, int arg1, Bundle arg2)
+		{
+		}
 	}
 
 	private boolean isInternetAvailable()
@@ -332,7 +433,7 @@ public class SplashScreen extends Activity
 		}
 		return haveConnectedWifi || haveConnectedMobile;
 	}
-	
+
 	private class HttpAsyncTask extends AsyncTask<String, Void, String>
 	{
 		@Override
@@ -346,7 +447,7 @@ public class SplashScreen extends Activity
 		@Override
 		protected void onPostExecute(String result)
 		{
-			//Log.d("JSON", result);
+			// Log.d("JSON", result);
 		}
 	}
 

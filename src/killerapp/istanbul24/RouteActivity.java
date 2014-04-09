@@ -9,16 +9,11 @@ package killerapp.istanbul24;
  */
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-import org.mapsforge.android.maps.DebugSettings;
 import org.mapsforge.android.maps.MapActivity;
 import org.mapsforge.android.maps.MapView;
-import org.mapsforge.android.maps.Projection;
 import org.mapsforge.android.maps.overlay.ListOverlay;
 import org.mapsforge.android.maps.overlay.Marker;
 import org.mapsforge.android.maps.overlay.PolygonalChain;
@@ -33,17 +28,14 @@ import android.graphics.Color;
 import android.graphics.DashPathEffect;
 import android.graphics.Paint;
 import android.graphics.Path;
-import android.graphics.Point;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
-import android.view.DragEvent;
 import android.view.GestureDetector;
 import android.view.GestureDetector.SimpleOnGestureListener;
 import android.view.MotionEvent;
-import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 import android.view.Window;
 import android.widget.Toast;
 
@@ -53,7 +45,6 @@ import com.graphhopper.GraphHopper;
 import com.graphhopper.GraphHopperAPI;
 import com.graphhopper.android.GHAsyncTask;
 import com.graphhopper.storage.Graph;
-import com.graphhopper.util.CmdArgs;
 import com.graphhopper.util.Constants;
 import com.graphhopper.util.PointList;
 import com.graphhopper.util.StopWatch;

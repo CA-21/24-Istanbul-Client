@@ -71,7 +71,6 @@ public class JSONParser
 					}
 					catch (ParseException e)
 					{
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
 					
@@ -110,7 +109,6 @@ public class JSONParser
 		}
 		catch (JSONException e)
 		{
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
@@ -163,7 +161,6 @@ public class JSONParser
 					}
 					catch (ParseException e)
 					{
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
 					
@@ -211,7 +208,6 @@ public class JSONParser
 		}
 		catch (JSONException e)
 		{
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
