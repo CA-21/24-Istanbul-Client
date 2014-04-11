@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.concurrent.ExecutionException;
+import java.util.zip.GZIPInputStream;
 
 import killerapp.istanbul24.db.DatabaseHelper;
 
@@ -356,6 +357,8 @@ public class SplashScreen extends Activity
 		String result = "";
 		try
 		{
+			
+			
 
 			// create HttpClient
 			HttpClient httpclient = new DefaultHttpClient();
@@ -366,6 +369,10 @@ public class SplashScreen extends Activity
 			// receive response as inputStream
 			inputStream = httpResponse.getEntity().getContent();
 
+			
+			GZIPInputStream gis = new GZIPInputStream(inputStream);
+			
+			
 			// convert inputstream to string
 			if (inputStream != null)
 				result = convertInputStreamToString(inputStream);

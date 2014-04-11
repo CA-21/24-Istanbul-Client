@@ -5,9 +5,11 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import killerapp.istanbul24.db.Category;
 import killerapp.istanbul24.db.DatabaseHelper;
 import killerapp.istanbul24.db.Option;
 import killerapp.istanbul24.db.Question;
+import killerapp.istanbul24.db.Tag;
 import killerapp.istanbul24.db.Venue;
 import killerapp.istanbul24.db.VenueMeta;
 
@@ -219,7 +221,103 @@ public class JSONParser
 
 	public static void parseCategories(String str, DatabaseHelper dbHelper)
 	{
+		//assert (dbHelper != null);
+		
+				try
+				{
+					JSONObject jsonObject = new JSONObject(str);
+					
+					int count = jsonObject.getInt("count");
+					Log.d("JSON", count + " categories received.");
 
+					JSONArray questions = jsonObject.getJSONArray("category");
+					
+					int i = 0, j;
+					for (; i < count; ++i)
+					{
+						JSONObject category = questions.getJSONObject(i);
+						int categoryId = category.getInt("id");
+						String updateDate = category.getString("update_date");
+
+						Category exCategory = null;
+						
+						try 
+						{
+							exCategory = dbHelper.getCategory(categoryId);
+						}
+						catch (CursorIndexOutOfBoundsException e)
+						{
+							Log.d("24Istanbul-DB", e.getMessage());
+						}
+						
+						if (exCategory == null)
+						{
+							dbHelper.createCategory(new Category(category.getString("name"), 
+									category.getString("update_date")));
+						}
+						else
+						{
+							Date dateNew = null, dateOld = null;
+							
+							try
+							{
+								dateNew = DATE_FORMAT.parse(updateDate);
+								dateOld = DATE_FORMAT.parse(exCategory.getLastUpdateDate());
+							}
+							catch (ParseException e)
+							{
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+							
+							if (dateNew.after(dateOld))
+							{
+								dbHelper.updateCategory(new Category(category.getString("name"), 
+										category.getString("update_date")));
+							}
+						}
+						
+						JSONArray tags = category.getJSONArray("tags");
+
+						for (j = 0; j < tags.length(); ++j)
+						{
+							
+							JSONObject tag = tags.getJSONObject(j);
+							Tag exTag = null;
+
+							try 
+							{
+								exTag = dbHelper.getTag(tag.getInt("id"));
+							}
+							catch (CursorIndexOutOfBoundsException e)
+							{
+								Log.d("24Istanbul-DB", e.getMessage());
+							}
+							
+							int tagId;
+							try
+							{
+								tagId = tag.getInt("tag");
+							}
+							catch (Exception e)
+							{
+								tagId = -1;
+							}
+							/*
+							if (exTag == null)
+								dbHelper.createTag(new Tag(question.getInt("id"), tagId, option.getString("text")));
+							else
+								Log.d("24Istanbul-DB", "Option already exists.");
+							*/
+						}
+					}
+					
+				}
+				catch (JSONException e)
+				{
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 	}
 
 }
