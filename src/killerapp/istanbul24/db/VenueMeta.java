@@ -12,12 +12,12 @@ public final class VenueMeta
 		this.tagId = tagId;
 		this.venueId = venueId;
 	}
-	
+
 	public VenueMeta(int tagId, String venueId)
 	{
 		this(-1, tagId, venueId);
 	}
-	
+
 	public int getId()
 	{
 		return id;

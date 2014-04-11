@@ -16,11 +16,21 @@ import android.widget.Toast;
 
 public class MainActivity extends Activity
 {
+	private DatabaseHelper db;
+	double longitude = 0;
+	double latitude = 0;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+		
+		Intent intent = getIntent();
+		longitude = intent.getDoubleExtra("long", 0);
+		latitude = intent.getDoubleExtra("lat", 0);
+		
+		db = new DatabaseHelper(this);
 	}
 
 	@Override
@@ -30,21 +40,36 @@ public class MainActivity extends Activity
 		return true;
 	}
 	
-	public void startDemo(View view)
+	public void startQuestionActivity(View view)
 	{
-		ArrayList<Integer> list = new ArrayList<Integer>();
-		// TODO: Tags of nearest POIs will retrieved from database.
+		ArrayList<Integer> questions = null;
 		
+		// TODO: get questions for selected tag
+		switch(view.getId())
+		{
+		case R.id.eatButton:
+			break;
+		case R.id.attractionsButton:
+			break;
+		case R.id.goButton:
+			break;
+		}
+
 		ArrayList<Integer> selected = new ArrayList<Integer>(); // It is empty. Selected tags will add into this.
 		ArrayList<Venue> venues = new ArrayList<Venue>();	// It is empty. Places will add into this.
 		
+		
 		Intent intent = new Intent(this, QuestionActivity.class);	// Intent is created.
-		intent.putExtra("list", list);
 		intent.putExtra("selected", selected);
 		intent.putExtra("question", 0);
+		intent.putExtra("questions", questions);
+		intent.putExtra("long", longitude);
+		intent.putExtra("lat", latitude);
 		intent.putParcelableArrayListExtra("venues", venues);
 		startActivity(intent);	// Activity is created.
 	}
+	
+
 
 	public void routeDemo(View view)
 	{

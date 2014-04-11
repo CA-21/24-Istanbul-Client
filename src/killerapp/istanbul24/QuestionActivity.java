@@ -1,6 +1,7 @@
 package killerapp.istanbul24;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 import killerapp.istanbul24.db.DatabaseHelper;
 import killerapp.istanbul24.db.Option;
@@ -16,11 +17,13 @@ import android.widget.TextView;
 
 public class QuestionActivity extends Activity implements OnClickListener
 {
-	private ArrayList<Integer> list;
 	private ArrayList<Integer> selected;
 	private Question question;
 	private int questionCount;
 	private ArrayList<Venue> venues;
+	private ArrayList<Integer> questions;
+	ArrayList<Option> options;
+	double latitude, longitude;
 	private DatabaseHelper db;
 
 	@Override
@@ -29,44 +32,43 @@ public class QuestionActivity extends Activity implements OnClickListener
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.question_activity);
 
+
 		db = new DatabaseHelper(this);
-		db.exportDB();
 		
 		TextView questionView = (TextView) findViewById(R.id.questionView);
 
 		Intent intent = getIntent();
 
-		list = intent.getIntegerArrayListExtra("list");
 		selected = intent.getIntegerArrayListExtra("selected");
 		questionCount = intent.getIntExtra("question", 0);
 		venues = intent.getParcelableArrayListExtra("venues");
+		questions = intent.getIntegerArrayListExtra("questions");
+		longitude = intent.getDoubleExtra("long", 0);
+		latitude = intent.getDoubleExtra("lat", 0);
 
-		// TODO: A question will be choosen for a random tag in list.
+		Random rand = new Random();
+		
 		int questionID = 1;
+		// TODO: get random question id and remove it from arraylist
+		
 		question = db.getQuestion(questionID);//new Question(questionID, db);
 		questionView.setText(question.getQuestion());
 
-		ArrayList<Option> options = db.getOptions(questionID);
+		options = db.getOptions(questionID);
 		
 		// TODO: Buttons will be created dynamicly (Button count may vary)
 		// TODO: There will be a "Skip this question" button.
 		Button button1 = (Button) findViewById(R.id.button1);
 		Button button2 = (Button) findViewById(R.id.button2);
-		Button button3 = (Button) findViewById(R.id.button3);
 		Button skip = (Button) findViewById(R.id.skip);
 
 		button1.setText(options.get(0).getName());
-		if (options.size() > 1)
-			button2.setText(options.get(1).getName());
-		else
-			button2.setText("Blah blah");
-		button3.setText("Blah blah");
+		//button2.setText(options.get(1).getName());
 		skip.setText("Skip this question");
 
 		// TODO: onClick listeners will be added for each button
 		button1.setOnClickListener(this);
 		button2.setOnClickListener(this);
-		button3.setOnClickListener(this);
 		skip.setOnClickListener(this);
 
 	}
@@ -85,37 +87,42 @@ public class QuestionActivity extends Activity implements OnClickListener
 		case R.id.button2:
 			option = 1;
 			break;
-		case R.id.button3:
-			option = 2;
-			break;
 		}
-/*
+
 		if (option != -1)
 		{
-			db.getOptions(question.getId());
-			selected.add(question.getTagID(option));
+			int newTag = options.get(option).getTagId();
+			
+			if(newTag != -1)
+			{
+				selected.add(newTag);				
+				venues.addAll(db.getVenues(newTag, longitude, latitude));
+			}
+
 			questionCount++;
 
-			// TODO: New places will be added from database into places arraylist
+			
 		}
 
 		if (questionCount < 5 && venues.size() < 5)
 		{
 			Intent intent = new Intent(this, QuestionActivity.class);
 			intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-			intent.putExtra("list", list);
 			intent.putExtra("selected", selected);
 			intent.putExtra("question", questionCount);
 			intent.putParcelableArrayListExtra("venues", venues);
+			intent.putExtra("long", longitude);
+			intent.putExtra("lat", latitude);
 			startActivity(intent); // Activity is created.
 		}
 		else
 		{
 			Intent intent = new Intent(this, ResultActivity.class);
+			intent.putParcelableArrayListExtra("venues", venues);
 			intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 			startActivity(intent); // Activity is created.
 		}
-*/
+
 
 	}
 

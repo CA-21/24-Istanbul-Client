@@ -7,12 +7,29 @@
     tools:context=".MainActivity" >
 
     <Button
-        android:id="@+id/demoButton"
+        android:id="@+id/eatButton"
         android:layout_width="fill_parent"
         android:layout_height="0dp"
         android:layout_weight="0.2"
-        android:onClick="startDemo"
-        android:text="Question Demo" />
+        android:onClick="startQuestionActivity"
+        android:text="Eat Something" />
+    
+        <Button
+        android:id="@+id/attractionsButton"
+        android:layout_width="fill_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.2"
+        android:onClick="startQuestionActivity"
+        android:text="Tourist Attractions" />
+        
+            <Button
+        android:id="@+id/goButton"
+        android:layout_width="fill_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.2"
+        android:onClick="startQuestionActivity"
+        android:text="Go Out" />
+
 
     <Button
         android:id="@+id/routeButton"
