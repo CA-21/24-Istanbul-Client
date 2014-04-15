@@ -27,7 +27,7 @@ public class JSONParser
 
 	public static void parsePois(String str, DatabaseHelper dbHelper)
 	{
-	//	assert (dbHelper != null);
+		// assert (dbHelper != null);
 
 		try
 		{
@@ -46,8 +46,8 @@ public class JSONParser
 				String updateDate = poi.getString("update_date");
 
 				Venue exVenue = null;
-				
-				try 
+
+				try
 				{
 					exVenue = dbHelper.getVenue(venueId);
 				}
@@ -55,7 +55,7 @@ public class JSONParser
 				{
 					Log.d("24Istanbul-DB", e.getMessage());
 				}
-				
+
 				if (exVenue == null)
 				{
 					dbHelper.createVenue(new Venue(venueId, poi
@@ -65,25 +65,27 @@ public class JSONParser
 				else
 				{
 					Date dateNew = null, dateOld = null;
-					
+
 					try
 					{
 						dateNew = DATE_FORMAT.parse(updateDate);
-						dateOld = DATE_FORMAT.parse(exVenue.getLastUpdateDate());
+						dateOld = DATE_FORMAT
+								.parse(exVenue.getLastUpdateDate());
 					}
 					catch (ParseException e)
 					{
 						e.printStackTrace();
 					}
-					
+
 					if (dateNew.after(dateOld))
 					{
 						dbHelper.updateVenue(new Venue(venueId, poi
-								.getString("address"), poi.getString("name"), poi
-								.getDouble("lng"), poi.getDouble("lat"), updateDate));
+								.getString("address"), poi.getString("name"),
+								poi.getDouble("lng"), poi.getDouble("lat"),
+								updateDate));
 					}
 				}
-				
+
 				JSONArray tags = poi.getJSONArray("tags");
 
 				for (j = 0; j < tags.length(); ++j)
@@ -92,16 +94,15 @@ public class JSONParser
 
 					VenueMeta exVenueMeta = null;
 
-					try 
+					try
 					{
-						exVenueMeta = dbHelper.getVenueMeta(tagId,
-								venueId);
+						exVenueMeta = dbHelper.getVenueMeta(tagId, venueId);
 					}
 					catch (CursorIndexOutOfBoundsException e)
 					{
 						Log.d("24Istanbul-DB", e.getMessage());
 					}
-					
+
 					if (exVenueMeta == null)
 						dbHelper.createVenueMeta(new VenueMeta(tagId, venueId));
 					else
@@ -118,17 +119,17 @@ public class JSONParser
 
 	public static void parseQuestions(String str, DatabaseHelper dbHelper)
 	{
-		//assert (dbHelper != null);
-		
+		// assert (dbHelper != null);
+
 		try
 		{
 			JSONObject jsonObject = new JSONObject(str);
-			
+
 			int count = jsonObject.getInt("count");
 			Log.d("JSON", count + " questions received.");
 
 			JSONArray questions = jsonObject.getJSONArray("question");
-			
+
 			int i = 0, j;
 			for (; i < count; ++i)
 			{
@@ -137,8 +138,8 @@ public class JSONParser
 				String updateDate = question.getString("update_date");
 
 				Question exQuestion = null;
-				
-				try 
+
+				try
 				{
 					exQuestion = dbHelper.getQuestion(questionId);
 				}
@@ -146,42 +147,47 @@ public class JSONParser
 				{
 					Log.d("24Istanbul-DB", e.getMessage());
 				}
-				
+
 				if (exQuestion == null)
 				{
-					dbHelper.createQuestion(new Question(question.getString("question"), 
-							question.getString("update_date")));
+					dbHelper.createQuestion(new Question(question
+							.getInt("category"),
+							question.getString("question"), question
+									.getString("update_date")));
 				}
 				else
 				{
 					Date dateNew = null, dateOld = null;
-					
+
 					try
 					{
 						dateNew = DATE_FORMAT.parse(updateDate);
-						dateOld = DATE_FORMAT.parse(exQuestion.getLastUpdateDate());
+						dateOld = DATE_FORMAT.parse(exQuestion
+								.getLastUpdateDate());
 					}
 					catch (ParseException e)
 					{
 						e.printStackTrace();
 					}
-					
+
 					if (dateNew.after(dateOld))
 					{
-						dbHelper.updateQuestion(new Question(question.getString("question"), 
-								question.getString("update_date")));
+						dbHelper.updateQuestion(new Question(question
+								.getInt("category"), question
+								.getString("question"), question
+								.getString("update_date")));
 					}
 				}
-				
+
 				JSONArray options = question.getJSONArray("options");
 
 				for (j = 0; j < options.length(); ++j)
 				{
-					
+
 					JSONObject option = options.getJSONObject(j);
 					Option exOption = null;
 
-					try 
+					try
 					{
 						exOption = dbHelper.getOption(option.getInt("id"));
 					}
@@ -189,7 +195,7 @@ public class JSONParser
 					{
 						Log.d("24Istanbul-DB", e.getMessage());
 					}
-					
+
 					int tagId;
 					try
 					{
@@ -199,121 +205,123 @@ public class JSONParser
 					{
 						tagId = -1;
 					}
-					
+
 					if (exOption == null)
-						dbHelper.createOption(new Option(question.getInt("id"), tagId, option.getString("text")));
+						dbHelper.createOption(new Option(question.getInt("id"),
+								tagId, option.getString("text")));
 					else
 						Log.d("24Istanbul-DB", "Option already exists.");
 				}
 			}
-			
+
 		}
 		catch (JSONException e)
 		{
 			e.printStackTrace();
 		}
-		
+
 	}
 
 	public static void parseCategories(String str, DatabaseHelper dbHelper)
 	{
-		//assert (dbHelper != null);
-		
+		// assert (dbHelper != null);
+
+		try
+		{
+			JSONObject jsonObject = new JSONObject(str);
+
+			int count = jsonObject.getInt("count");
+			Log.d("JSON", count + " categories received.");
+
+			JSONArray categories = jsonObject.getJSONArray("category");
+
+			int i = 0, j;
+			for (; i < count; ++i)
+			{
+				JSONObject category = categories.getJSONObject(i);
+				int categoryId = category.getInt("id");
+				String updateDate = category.getString("update_date");
+
+				Category exCategory = null;
+
 				try
 				{
-					JSONObject jsonObject = new JSONObject(str);
-					
-					int count = jsonObject.getInt("count");
-					Log.d("JSON", count + " categories received.");
+					exCategory = dbHelper.getCategory(categoryId);
+				}
+				catch (CursorIndexOutOfBoundsException e)
+				{
+					Log.d("24Istanbul-DB", e.getMessage());
+				}
 
-					JSONArray questions = jsonObject.getJSONArray("category");
-					
-					int i = 0, j;
-					for (; i < count; ++i)
+				if (exCategory == null)
+				{
+					dbHelper.createCategory(new Category(category
+							.getString("name"), category
+							.getString("update_date")));
+				}
+				else
+				{
+					Date dateNew = null, dateOld = null;
+
+					try
 					{
-						JSONObject category = questions.getJSONObject(i);
-						int categoryId = category.getInt("id");
-						String updateDate = category.getString("update_date");
+						dateNew = DATE_FORMAT.parse(updateDate);
+						dateOld = DATE_FORMAT.parse(exCategory
+								.getLastUpdateDate());
+					}
+					catch (ParseException e)
+					{
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 
-						Category exCategory = null;
-						
-						try 
-						{
-							exCategory = dbHelper.getCategory(categoryId);
-						}
-						catch (CursorIndexOutOfBoundsException e)
-						{
-							Log.d("24Istanbul-DB", e.getMessage());
-						}
-						
-						if (exCategory == null)
-						{
-							dbHelper.createCategory(new Category(category.getString("name"), 
-									category.getString("update_date")));
-						}
-						else
-						{
-							Date dateNew = null, dateOld = null;
-							
-							try
-							{
-								dateNew = DATE_FORMAT.parse(updateDate);
-								dateOld = DATE_FORMAT.parse(exCategory.getLastUpdateDate());
-							}
-							catch (ParseException e)
-							{
-								// TODO Auto-generated catch block
-								e.printStackTrace();
-							}
-							
-							if (dateNew.after(dateOld))
-							{
-								dbHelper.updateCategory(new Category(category.getString("name"), 
-										category.getString("update_date")));
-							}
-						}
-						
-						JSONArray tags = category.getJSONArray("tags");
+					if (dateNew.after(dateOld))
+					{
+						dbHelper.updateCategory(new Category(category
+								.getString("name"), category
+								.getString("update_date")));
+					}
+				}
 
-						for (j = 0; j < tags.length(); ++j)
-						{
-							
-							JSONObject tag = tags.getJSONObject(j);
-							Tag exTag = null;
+				JSONArray tags = category.getJSONArray("tags");
 
-							try 
-							{
-								exTag = dbHelper.getTag(tag.getInt("id"));
-							}
-							catch (CursorIndexOutOfBoundsException e)
-							{
-								Log.d("24Istanbul-DB", e.getMessage());
-							}
-							
-							int tagId;
-							try
-							{
-								tagId = tag.getInt("tag");
-							}
-							catch (Exception e)
-							{
-								tagId = -1;
-							}
-							/*
-							if (exTag == null)
-								dbHelper.createTag(new Tag(question.getInt("id"), tagId, option.getString("text")));
-							else
-								Log.d("24Istanbul-DB", "Option already exists.");
-							*/
-						}
+				for (j = 0; j < tags.length(); ++j)
+				{
+
+					int tagId;
+					try
+					{
+						tagId = tags.getInt(j);
+					}
+					catch (Exception e)
+					{
+						tagId = -1;
 					}
 					
+					Tag exTag = null;
+					try
+					{
+						exTag = dbHelper.getTag(tagId);
+					}
+					catch (CursorIndexOutOfBoundsException e)
+					{
+						Log.d("24Istanbul-DB", e.getMessage());
+					}
+
+					if (exTag == null)
+						dbHelper.createTag(new Tag(tagId, categoryId));
+					else
+						Log.d("24Istanbul-DB", "Tag already exists.");
+
 				}
-				catch (JSONException e)
-				{
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+			}
+
+		}
+		catch (JSONException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 }

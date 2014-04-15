@@ -4,18 +4,16 @@ public final class Tag
 {
 	private int id;
 	private int categoryId;
-	private String name;
 
-	public Tag(int id, int categoryId, String name)
+	public Tag(int id, int categoryId)
 	{
 		this.id = id;
 		this.categoryId = categoryId;
-		this.name = name;
 	}
 	
-	public Tag(int categoryId, String name)
+	public Tag(int categoryId)
 	{
-		this(-1, categoryId, name);
+		this(-1, categoryId);
 	}
 
 	public int getId()
@@ -36,15 +34,5 @@ public final class Tag
 	public void setCategoryId(int categoryId)
 	{
 		this.categoryId = categoryId;
-	}
-
-	public String getName()
-	{
-		return name;
-	}
-
-	public void setName(String name)
-	{
-		this.name = name;
 	}
 }

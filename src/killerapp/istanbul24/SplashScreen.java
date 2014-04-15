@@ -10,6 +10,7 @@ import java.util.zip.GZIPInputStream;
 
 import killerapp.istanbul24.db.DatabaseHelper;
 
+import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
@@ -176,16 +177,22 @@ public class SplashScreen extends Activity
 
 				if (db == null)
 					db = new DatabaseHelper(activity);
-
+				
 				String poiJsonResult = null;
 				String questionJsonResult = null;
+				String categoryJsonResult = null;
+				
 				try
 				{
 
 					poiJsonResult = new HttpAsyncTask().execute(
-							"http://sw2.obcdn.net/api/poi/all.json").get();
-					questionJsonResult = new HttpAsyncTask().execute(
-							"http://sw2.obcdn.net/api/question/all.json").get();
+								"http://sw2.obcdn.net/api/poi/all.json").get();
+						questionJsonResult = new HttpAsyncTask().execute(
+								"http://sw2.obcdn.net/api/question/all.json")
+								.get();
+						categoryJsonResult = new HttpAsyncTask().execute(
+								"http://sw2.obcdn.net/api/category/all.json")
+								.get();
 				}
 				catch (InterruptedException e)
 				{
@@ -198,7 +205,10 @@ public class SplashScreen extends Activity
 
 				JSONParser.parsePois(poiJsonResult, db);
 				JSONParser.parseQuestions(questionJsonResult, db);
+				JSONParser.parseCategories(categoryJsonResult, db);
 
+				db.exportDB();
+				
 				first = true;
 				level++;
 				break;
@@ -448,7 +458,7 @@ public class SplashScreen extends Activity
 		@Override
 		protected void onPostExecute(String result)
 		{
-			// Log.d("JSON", result);
+//			Log.d("JSON", result);
 		}
 	}
 
@@ -458,27 +468,35 @@ public class SplashScreen extends Activity
 		String result = "";
 		try
 		{
-			
-			
-
 			// create HttpClient
 			HttpClient httpclient = new DefaultHttpClient();
 
-			// make GET request to the given URL
-			HttpResponse httpResponse = httpclient.execute(new HttpGet(url));
+			HttpGet httpGet = new HttpGet(url);
+			
+			httpGet.setHeader("Accept", "application/json");
+			httpGet.setHeader("Accept-Encoding", "gzip");
+			
+			// make GET request which will accept gzip encoding to the given URL
+			HttpResponse httpResponse = httpclient.execute(httpGet);
 
 			// receive response as inputStream
 			inputStream = httpResponse.getEntity().getContent();
 
-			
-			GZIPInputStream gis = new GZIPInputStream(inputStream);
-			
-			
-			// convert inputstream to string
-			if (inputStream != null)
-				result = convertInputStreamToString(inputStream);
-			else
-				result = "Did not work!";
+			Header contentEncoding = httpResponse
+					.getFirstHeader("Content-Encoding");
+
+			if (contentEncoding != null
+					&& contentEncoding.getValue().equalsIgnoreCase("gzip"))
+			{
+				
+				GZIPInputStream gis = new GZIPInputStream(inputStream);
+
+				// convert inputStream to string
+				if (inputStream != null)
+					result = convertInputStreamToString(gis);
+				else
+					result = "Did not work!";
+			}
 
 		}
 		catch (Exception e)
@@ -492,8 +510,10 @@ public class SplashScreen extends Activity
 	private static String convertInputStreamToString(InputStream inputStream)
 			throws IOException
 	{
+		
 		BufferedReader bufferedReader = new BufferedReader(
 				new InputStreamReader(inputStream));
+		
 		String line = "";
 		String result = "";
 		while ((line = bufferedReader.readLine()) != null)

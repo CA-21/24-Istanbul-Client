@@ -21,12 +21,13 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteDatabase.CursorFactory;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Environment;
+import android.util.Log;
 
 public class DatabaseHelper extends SQLiteOpenHelper
 {
 	// Database Version
-	private static final int DATABASE_VERSION = 1;
-	private static double radious = 1;
+	private static final int DATABASE_VERSION = 2;
+	private static double radius = 1;
 
 	// Database Name
 	private static final String DATABASE_NAME = "24Istanbul-db";
@@ -88,7 +89,6 @@ public class DatabaseHelper extends SQLiteOpenHelper
 
 	private static final String CREATE_TABLE_TAG = "CREATE TABLE IF NOT EXISTS tags ("
 			+ "id INTEGER PRIMARY KEY,"
-			+ "name VARCHAR(32) NOT NULL,"
 			+ "categoryId TINYINT(4) NOT NULL,"
 			+ "FOREIGN KEY(categoryId) REFERENCES categories(id)"
 			+ ");";
@@ -147,6 +147,7 @@ public class DatabaseHelper extends SQLiteOpenHelper
 		SQLiteDatabase db = this.getWritableDatabase();
 
 		ContentValues values = new ContentValues();
+		values.put(KEY_CATEGORY_ID, arg.getCategoryId());
 		values.put(KEY_QUESTION, arg.getQuestion());
 		values.put(KEY_LAST_UPDATE_DATE, arg.getLastUpdateDate());
 
@@ -169,7 +170,6 @@ public class DatabaseHelper extends SQLiteOpenHelper
 		SQLiteDatabase db = this.getWritableDatabase();
 
 		ContentValues values = new ContentValues();
-		values.put(KEY_NAME, arg.getName());
 		values.put(KEY_CATEGORY_ID, arg.getCategoryId());
 
 		return db.insert(TABLE_TAG, null, values);
@@ -253,10 +253,49 @@ public class DatabaseHelper extends SQLiteOpenHelper
 		return list;
 	}
 
-	public ArrayList<Integer> getQuestions(int categoryId)
+	public ArrayList<Question> getQuestions(int categoryId)
 	{
-		// TODO: get question ids for catId
-		return null;
+		SQLiteDatabase db = this.getReadableDatabase();
+
+		String selectQuery = "SELECT  * FROM " + TABLE_QUESTION + " WHERE "
+				+ KEY_CATEGORY_ID + " = " + categoryId;
+
+		Cursor c = db.rawQuery(selectQuery, null);
+
+		ArrayList<Question> list = new ArrayList<Question>();
+		if (c != null)
+		{
+			while (c.moveToNext())
+				list.add(new Question(c.getInt(c.getColumnIndex(KEY_ID)), c
+						.getInt(c.getColumnIndex(KEY_CATEGORY_ID)), c
+						.getString(c.getColumnIndex(KEY_QUESTION)), c
+						.getString(c.getColumnIndex(KEY_LAST_UPDATE_DATE))));
+		}
+
+		c.close();
+
+		return list;
+	}
+	
+	public ArrayList<Integer> getQuestionIds(int categoryId)
+	{
+		SQLiteDatabase db = this.getReadableDatabase();
+
+		String selectQuery = "SELECT " + KEY_ID + " FROM " + TABLE_QUESTION
+				+ " WHERE " + KEY_CATEGORY_ID + " = " + categoryId;
+
+		Cursor c = db.rawQuery(selectQuery, null);
+
+		ArrayList<Integer> list = new ArrayList<Integer>();
+		if (c != null)
+		{
+			while (c.moveToNext())
+				list.add(Integer.valueOf(c.getInt(c.getColumnIndex(KEY_ID))));
+		}
+
+		c.close();
+
+		return list;
 	}
 
 	public Question getQuestion(int id)
@@ -271,7 +310,8 @@ public class DatabaseHelper extends SQLiteOpenHelper
 		if (c != null)
 			c.moveToFirst();
 
-		return new Question(c.getInt(c.getColumnIndex(KEY_ID)), c.getString(c
+		return new Question(c.getInt(c.getColumnIndex(KEY_ID)), c.getInt(c
+				.getColumnIndex(KEY_CATEGORY_ID)), c.getString(c
 				.getColumnIndex(KEY_QUESTION)), c.getString(c
 				.getColumnIndex(KEY_LAST_UPDATE_DATE)));
 	}
@@ -280,8 +320,8 @@ public class DatabaseHelper extends SQLiteOpenHelper
 	{
 		SQLiteDatabase db = this.getReadableDatabase();
 
-		String selectQuery = "SELECT  " + KEY_ID + " FROM " + TABLE_TAG + " WHERE "
-				+ KEY_CATEGORY_ID + " = " + categoryId;
+		String selectQuery = "SELECT  " + KEY_ID + " FROM " + TABLE_TAG
+				+ " WHERE " + KEY_CATEGORY_ID + " = " + categoryId;
 
 		Cursor c = db.rawQuery(selectQuery, null);
 
@@ -310,8 +350,7 @@ public class DatabaseHelper extends SQLiteOpenHelper
 			c.moveToFirst();
 
 		return new Tag(c.getInt(c.getColumnIndex(KEY_ID)), c.getInt(c
-				.getColumnIndex(KEY_CATEGORY_ID)), c.getString(c
-				.getColumnIndex(KEY_NAME)));
+				.getColumnIndex(KEY_CATEGORY_ID)));
 	}
 
 	public Venue getVenue(String id)
@@ -342,10 +381,10 @@ public class DatabaseHelper extends SQLiteOpenHelper
 
 		String selectQuery = "SELECT " + TABLE_VENUE + "." + KEY_ID + " FROM " + TABLE_VENUE + ", " +
 				TABLE_VENUE_META + " WHERE " + TABLE_VENUE_META + "." + KEY_TAG_ID + " = " + tagId + " AND " +
-				TABLE_VENUE + "." + KEY_LONGITUDE + " < " + (longitude + radious) + " AND " +
-				TABLE_VENUE + "." + KEY_LONGITUDE + " > " + (longitude - radious) + " AND " +
-				TABLE_VENUE + "." + KEY_LATITUDE + " < " + (latitude + radious) + " AND " +
-				TABLE_VENUE + "." + KEY_LATITUDE + " > " + (latitude - radious);
+				TABLE_VENUE + "." + KEY_LONGITUDE + " < " + (longitude + radius) + " AND " +
+				TABLE_VENUE + "." + KEY_LONGITUDE + " > " + (longitude - radius) + " AND " +
+				TABLE_VENUE + "." + KEY_LATITUDE + " < " + (latitude + radius) + " AND " +
+				TABLE_VENUE + "." + KEY_LATITUDE + " > " + (latitude - radius);
 
 		Cursor c = db.rawQuery(selectQuery, null);
 
@@ -422,6 +461,7 @@ public class DatabaseHelper extends SQLiteOpenHelper
 
 		ContentValues values = new ContentValues();
 		values.put(KEY_ID, arg.getId());
+		values.put(KEY_CATEGORY_ID, arg.getCategoryId());
 		values.put(KEY_QUESTION, arg.getQuestion());
 		values.put(KEY_LAST_UPDATE_DATE, arg.getLastUpdateDate());
 
@@ -435,7 +475,6 @@ public class DatabaseHelper extends SQLiteOpenHelper
 
 		ContentValues values = new ContentValues();
 		values.put(KEY_ID, arg.getId());
-		values.put(KEY_NAME, arg.getName());
 		values.put(KEY_CATEGORY_ID, arg.getCategoryId());
 
 		return db.update(TABLE_TAG, values, KEY_ID + " = ?",
@@ -518,6 +557,8 @@ public class DatabaseHelper extends SQLiteOpenHelper
 			fis.close();
 			fos.close();
 
+			Log.d("","db exported.");
+			
 			return true;
 		}
 		catch (IOException e)
