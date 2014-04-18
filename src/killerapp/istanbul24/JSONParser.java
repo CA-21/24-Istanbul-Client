@@ -34,8 +34,14 @@ public class JSONParser
 			JSONObject jsonObject = new JSONObject(str);
 
 			int count = jsonObject.getInt("count");
-			Log.d("JSON", count + " pois received.");
+			Log.d("JSON", count + " POIs received.");
 
+			if (count == 0)
+			{
+				Log.d("JSON", "POIs up to date.");
+				return;
+			}
+			
 			JSONArray pois = jsonObject.getJSONArray("pois");
 
 			int i = 0, j;
@@ -128,6 +134,12 @@ public class JSONParser
 			int count = jsonObject.getInt("count");
 			Log.d("JSON", count + " questions received.");
 
+			if (count == 0)
+			{
+				Log.d("JSON", "Questions up to date.");
+				return;
+			}
+			
 			JSONArray questions = jsonObject.getJSONArray("question");
 
 			int i = 0, j;
@@ -233,6 +245,12 @@ public class JSONParser
 			int count = jsonObject.getInt("count");
 			Log.d("JSON", count + " categories received.");
 
+			if (count == 0)
+			{
+				Log.d("JSON", "Categories up to date.");
+				return;
+			}
+			
 			JSONArray categories = jsonObject.getJSONArray("category");
 
 			int i = 0, j;

@@ -47,6 +47,8 @@ public class SplashScreen extends Activity
 	Location location = null;
 	Intent myIntent;
 	DatabaseHelper db;
+	
+	private static final String apiUrl = "http://sw2.obcdn.net/api/"; 
 
 	double longitude = 0;
 	double latitude = 0;
@@ -110,6 +112,7 @@ public class SplashScreen extends Activity
 			if (level == 4)
 			{
 				// TODO: check this
+				// if there is no connection or 24 hours have passed since the last update
 				if (!internet || System.currentTimeMillis() / 1000L - lastUpdate < 86400) // 24hours
 					level++;
 			}
@@ -184,15 +187,14 @@ public class SplashScreen extends Activity
 				
 				try
 				{
-
 					poiJsonResult = new HttpAsyncTask().execute(
-								"http://sw2.obcdn.net/api/poi/all.json").get();
-						questionJsonResult = new HttpAsyncTask().execute(
-								"http://sw2.obcdn.net/api/question/all.json")
-								.get();
-						categoryJsonResult = new HttpAsyncTask().execute(
-								"http://sw2.obcdn.net/api/category/all.json")
-								.get();
+							apiUrl + "poi/" + lastUpdate + "/updated.json").get();
+					questionJsonResult = new HttpAsyncTask().execute(
+							apiUrl + "question/" + lastUpdate + "/updated.json")
+							.get();
+					categoryJsonResult = new HttpAsyncTask().execute(
+							apiUrl + "category/" + lastUpdate + "/updated.json")
+							.get();
 				}
 				catch (InterruptedException e)
 				{
@@ -207,7 +209,7 @@ public class SplashScreen extends Activity
 				JSONParser.parseQuestions(questionJsonResult, db);
 				JSONParser.parseCategories(categoryJsonResult, db);
 
-				db.exportDB();
+				//db.exportDB();
 				
 				first = true;
 				level++;
