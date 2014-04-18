@@ -26,8 +26,8 @@ import android.util.Log;
 public class DatabaseHelper extends SQLiteOpenHelper
 {
 	// Database Version
-	private static final int DATABASE_VERSION = 2;
-	private static double radius = 1;
+	private static final int DATABASE_VERSION = 3;
+	public static float radius = 1;
 
 	// Database Name
 	private static final String DATABASE_NAME = "24Istanbul-db";
@@ -84,6 +84,7 @@ public class DatabaseHelper extends SQLiteOpenHelper
 
 	private static final String CREATE_TABLE_QUESTION = "CREATE TABLE IF NOT EXISTS questions ("
 			+ "id INTEGER PRIMARY KEY,"
+			+ "categoryId INTEGER NOT NULL,"
 			+ "question VARCHAR(255) NOT NULL,"
 			+ "lastUpdateDate DATE NOT NULL" + ");";
 

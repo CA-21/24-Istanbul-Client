@@ -2,6 +2,11 @@
 <resources>
 
     <string name="app_name">24 Istanbul</string>
-    <string name="action_settings">Settings</string>
+    <string name="settings_range">Change Range</string>
+    <string name="eat">Eat Something</string>
+    <string name="attraction">Tourist Attractions</string>
+    <string name="go">Go Out</string>
+    <string name="routeDemo">Route Demo</string>
+    <string name="shareDemo">Share Demo</string>
 
 </resources>

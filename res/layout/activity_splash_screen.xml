@@ -19,6 +19,7 @@
         <ImageView
             android:id="@+id/splashLogo"
             android:layout_width="240dp"
+            android:contentDescription="@string/app_name"
             android:layout_height="200dp"
             android:src="@drawable/logo" />
 
@@ -31,9 +32,9 @@
 
         <TextView
             android:id="@+id/splashText"
-            android:gravity="center"
             android:layout_width="240dp"
-            android:layout_height="20dp" />
+            android:layout_height="20dp"
+            android:gravity="center" />
     </LinearLayout>
 
 </RelativeLayout>

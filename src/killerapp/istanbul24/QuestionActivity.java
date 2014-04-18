@@ -10,6 +10,7 @@ import killerapp.istanbul24.db.Venue;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -23,7 +24,6 @@ public class QuestionActivity extends Activity implements OnClickListener
 	private ArrayList<Venue> venues;
 	private ArrayList<Integer> questions;
 	ArrayList<Option> options;
-	double latitude, longitude;
 	private DatabaseHelper db;
 
 	@Override
@@ -32,6 +32,7 @@ public class QuestionActivity extends Activity implements OnClickListener
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.question_activity);
 
+		Log.d("long",CurrentLocation.longitude+"");
 
 		db = new DatabaseHelper(this);
 		
@@ -43,8 +44,6 @@ public class QuestionActivity extends Activity implements OnClickListener
 		questionCount = intent.getIntExtra("question", 0);
 		venues = intent.getParcelableArrayListExtra("venues");
 		questions = intent.getIntegerArrayListExtra("questions");
-		longitude = intent.getDoubleExtra("long", 0);
-		latitude = intent.getDoubleExtra("lat", 0);
 
 		Random rand = new Random();
 		
@@ -96,7 +95,7 @@ public class QuestionActivity extends Activity implements OnClickListener
 			if(newTag != -1)
 			{
 				selected.add(newTag);				
-				venues.addAll(db.getVenues(newTag, longitude, latitude));
+				venues.addAll(db.getVenues(newTag, CurrentLocation.longitude, CurrentLocation.latitude));
 			}
 
 			questionCount++;
@@ -111,8 +110,6 @@ public class QuestionActivity extends Activity implements OnClickListener
 			intent.putExtra("selected", selected);
 			intent.putExtra("question", questionCount);
 			intent.putParcelableArrayListExtra("venues", venues);
-			intent.putExtra("long", longitude);
-			intent.putExtra("lat", latitude);
 			startActivity(intent); // Activity is created.
 		}
 		else

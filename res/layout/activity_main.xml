@@ -12,7 +12,7 @@
         android:layout_height="0dp"
         android:layout_weight="0.2"
         android:onClick="startQuestionActivity"
-        android:text="Eat Something" />
+        android:text="@string/eat" />
     
         <Button
         android:id="@+id/attractionsButton"
@@ -20,7 +20,7 @@
         android:layout_height="0dp"
         android:layout_weight="0.2"
         android:onClick="startQuestionActivity"
-        android:text="Tourist Attractions" />
+        android:text="@string/attraction" />
         
             <Button
         android:id="@+id/goButton"
@@ -28,7 +28,7 @@
         android:layout_height="0dp"
         android:layout_weight="0.2"
         android:onClick="startQuestionActivity"
-        android:text="Go Out" />
+        android:text="@string/go" />
 
 
     <Button
@@ -37,7 +37,7 @@
         android:layout_height="0dp"
         android:layout_weight="0.2"
         android:onClick="routeDemo"
-        android:text="Route Demo" />
+        android:text="@string/routeDemo" />
 
     <Button
         android:id="@+id/shareButton"
@@ -45,6 +45,6 @@
         android:layout_height="0dp"
         android:layout_weight="0.2"
         android:onClick="shareDemo"
-        android:text="Share Demo" />
+        android:text="@string/shareDemo" />
 
 </LinearLayout>
