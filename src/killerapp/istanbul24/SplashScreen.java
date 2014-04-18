@@ -48,9 +48,11 @@ public class SplashScreen extends Activity
 	Intent myIntent;
 	DatabaseHelper db;
 
+	private static final String apiUrl = "http://sw2.obcdn.net/api/"; 
+
 	double longitude = 0;
 	double latitude = 0;
-	
+
 	private static final long MIN_DISTANCE_CHANGE_FOR_UPDATES = 10; // 10 meters
     private static final long MIN_TIME_BW_UPDATES = 1000 * 60 * 1; // 1 minute
 
@@ -110,6 +112,7 @@ public class SplashScreen extends Activity
 			if (level == 4)
 			{
 				// TODO: check this
+				// if there is no connection or 24 hours have passed since the last update
 				if (!internet || System.currentTimeMillis() / 1000L - lastUpdate < 86400) // 24hours
 					level++;
 			}
@@ -177,22 +180,21 @@ public class SplashScreen extends Activity
 
 				if (db == null)
 					db = new DatabaseHelper(activity);
-				
+
 				String poiJsonResult = null;
 				String questionJsonResult = null;
 				String categoryJsonResult = null;
-				
+
 				try
 				{
-
 					poiJsonResult = new HttpAsyncTask().execute(
-								"http://sw2.obcdn.net/api/poi/all.json").get();
-						questionJsonResult = new HttpAsyncTask().execute(
-								"http://sw2.obcdn.net/api/question/all.json")
-								.get();
-						categoryJsonResult = new HttpAsyncTask().execute(
-								"http://sw2.obcdn.net/api/category/all.json")
-								.get();
+							apiUrl + "poi/" + lastUpdate + "/updated.json").get();
+					questionJsonResult = new HttpAsyncTask().execute(
+							apiUrl + "question/" + lastUpdate + "/updated.json")
+							.get();
+					categoryJsonResult = new HttpAsyncTask().execute(
+							apiUrl + "category/" + lastUpdate + "/updated.json")
+							.get();
 				}
 				catch (InterruptedException e)
 				{
@@ -207,8 +209,8 @@ public class SplashScreen extends Activity
 				JSONParser.parseQuestions(questionJsonResult, db);
 				JSONParser.parseCategories(categoryJsonResult, db);
 
-				db.exportDB();
-				
+				//db.exportDB();
+
 				first = true;
 				level++;
 				break;
@@ -472,10 +474,10 @@ public class SplashScreen extends Activity
 			HttpClient httpclient = new DefaultHttpClient();
 
 			HttpGet httpGet = new HttpGet(url);
-			
+
 			httpGet.setHeader("Accept", "application/json");
 			httpGet.setHeader("Accept-Encoding", "gzip");
-			
+
 			// make GET request which will accept gzip encoding to the given URL
 			HttpResponse httpResponse = httpclient.execute(httpGet);
 
@@ -488,7 +490,7 @@ public class SplashScreen extends Activity
 			if (contentEncoding != null
 					&& contentEncoding.getValue().equalsIgnoreCase("gzip"))
 			{
-				
+
 				GZIPInputStream gis = new GZIPInputStream(inputStream);
 
 				// convert inputStream to string
@@ -510,10 +512,10 @@ public class SplashScreen extends Activity
 	private static String convertInputStreamToString(InputStream inputStream)
 			throws IOException
 	{
-		
+
 		BufferedReader bufferedReader = new BufferedReader(
 				new InputStreamReader(inputStream));
-		
+
 		String line = "";
 		String result = "";
 		while ((line = bufferedReader.readLine()) != null)
