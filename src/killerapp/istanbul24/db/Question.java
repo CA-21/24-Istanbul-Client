@@ -1,5 +1,9 @@
 package killerapp.istanbul24.db;
 
+/**
+ * Model class for the question entity.
+ * 
+ */
 public final class Question
 {
 	private int id;

@@ -1,5 +1,9 @@
 package killerapp.istanbul24.db;
 
+/**
+ * Model class for the category entity.
+ * 
+ */
 public final class Category
 {
 	private int id;

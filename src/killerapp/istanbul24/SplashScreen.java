@@ -37,6 +37,11 @@ import android.util.Log;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+/**
+ * Initializes the application; checks if the map and the database needs an
+ * update, and starts the location listener.
+ * 
+ */
 public class SplashScreen extends Activity
 {
 	ProgressBar progressBar;

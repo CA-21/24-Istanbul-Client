@@ -1,7 +1,7 @@
 package killerapp.istanbul24;
 
 /* * * * * * 
- * RouteActivity: The activity that handles the routing.
+ * RouteActivity: The activity that handles the routing. 
  * v0.2
  * -----
  * TODO Prevent showing out of bounds.
@@ -49,6 +49,11 @@ import com.graphhopper.util.Constants;
 import com.graphhopper.util.PointList;
 import com.graphhopper.util.StopWatch;
 
+/**
+ * Handles routing and map rendering. Start and end points are
+ * passed as extra data inside the intent.
+ * 
+ */
 public class RouteActivity extends MapActivity
 {
 

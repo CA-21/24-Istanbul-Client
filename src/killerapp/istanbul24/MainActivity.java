@@ -21,6 +21,10 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
+/**
+ * The main activity. Categories are selected.
+ * 
+ */
 public class MainActivity extends Activity
 {
 

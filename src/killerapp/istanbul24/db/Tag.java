@@ -1,5 +1,9 @@
 package killerapp.istanbul24.db;
 
+/**
+ * Model class for the tag entity.
+ * 
+ */
 public final class Tag
 {
 	private int id;

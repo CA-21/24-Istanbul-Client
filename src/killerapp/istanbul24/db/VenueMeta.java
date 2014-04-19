@@ -1,5 +1,9 @@
 package killerapp.istanbul24.db;
 
+/**
+ * Model class for the venue meta entity.
+ * 
+ */
 public final class VenueMeta
 {
 	private int id;

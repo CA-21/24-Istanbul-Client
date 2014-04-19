@@ -3,6 +3,10 @@ package killerapp.istanbul24.db;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+/**
+ * Model class for the venue entity.
+ * 
+ */
 public final class Venue implements Parcelable
 {
 	private String id;

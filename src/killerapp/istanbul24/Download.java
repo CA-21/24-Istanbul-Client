@@ -16,6 +16,10 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Environment;
 
+/**
+ * Downloads and uncompresses the map file.
+ * 
+ */
 @SuppressLint("NewApi")
 public class Download
 {

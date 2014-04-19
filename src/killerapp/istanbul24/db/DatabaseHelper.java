@@ -23,6 +23,10 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Environment;
 import android.util.Log;
 
+/**
+ * Handles CRUD operations for the local SQLite database.
+ * 
+ */
 public class DatabaseHelper extends SQLiteOpenHelper
 {
 	// Database Version

@@ -5,6 +5,10 @@ import android.location.LocationListener;
 import android.os.Bundle;
 import android.util.Log;
 
+/**
+ * Stores the current location of the user.
+ * 
+ */
 public class CurrentLocation implements LocationListener
 {
 	public static double longitude = 0;
@@ -13,8 +17,9 @@ public class CurrentLocation implements LocationListener
 	@Override
 	public void onLocationChanged(Location location)
 	{
-		Log.d("Location","Location is retrieved from "+location.getProvider()+".");
-		
+		Log.d("Location",
+				"Location is retrieved from " + location.getProvider() + ".");
+
 		longitude = location.getLongitude();
 		latitude = location.getLatitude();
 	}

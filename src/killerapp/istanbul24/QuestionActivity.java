@@ -16,6 +16,11 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.TextView;
 
+/**
+ * Displays questions related to the chosen categories, and filters nearby
+ * places of interest according to the answers given.
+ * 
+ */
 public class QuestionActivity extends Activity implements OnClickListener
 {
 	private ArrayList<Integer> selected;

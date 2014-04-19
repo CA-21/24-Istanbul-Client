@@ -1,5 +1,9 @@
 package killerapp.istanbul24.db;
 
+/**
+ * Model class for the option entity.
+ * 
+ */
 public final class Option
 {
 	private int id;

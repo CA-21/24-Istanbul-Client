@@ -12,6 +12,11 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+/**
+ * Displays the places of interest that are filtered according to the user's
+ * answers.
+ * 
+ */
 public class ResultActivity extends Activity
 {
 	private ArrayList<Venue> venues;

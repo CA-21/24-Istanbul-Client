@@ -20,6 +20,11 @@ import org.json.JSONObject;
 import android.database.CursorIndexOutOfBoundsException;
 import android.util.Log;
 
+/**
+ * Parses JSON string and calls DatabaseHelper to insert into the SQLite
+ * database.
+ * 
+ */
 public class JSONParser
 {
 	private final static DateFormat DATE_FORMAT = new SimpleDateFormat(
