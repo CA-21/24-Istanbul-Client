@@ -82,7 +82,7 @@ public class SplashScreen extends Activity
 
 	private class taskController extends Thread implements LocationListener
 	{
-		int level = 0;
+		int phase = 0;
 		boolean first;
 		Long downloadID;
 		Long lastUpdate;
@@ -93,13 +93,13 @@ public class SplashScreen extends Activity
 		@Override
 		public void run()
 		{
-			if (level == 0)
+			if (phase == 0)
 			{
 				init();
 				first = true;
 			}
 
-			if (!internet && level < 3)
+			if (!internet && phase < 3)
 			{
 				new AlertDialog.Builder(activity)
 						.setTitle("Warning")
@@ -115,15 +115,15 @@ public class SplashScreen extends Activity
 				return;
 			}
 
-			if (level == 4)
+			if (phase == 4)
 			{
 				// TODO: check this
 				// if there is no connection or 24 hours have passed since the last update
 				if (!internet || System.currentTimeMillis() / 1000L - lastUpdate < 86400) // 24hours
-					level++;
+					phase++;
 			}
 
-			switch (level)
+			switch (phase)
 			{
 			case 1:
 				textView.setText("The map is downloading.");
@@ -132,7 +132,7 @@ public class SplashScreen extends Activity
 				editor = init.edit();
 				editor.putLong("downloadID", downloadID);
 				editor.commit();
-				level++;
+				phase++;
 				first = true;
 				break;
 			case 2:
@@ -142,9 +142,9 @@ public class SplashScreen extends Activity
 					first = false;
 				}
 
-				if (downloadComplated())
+				if (downloadCompleted())
 				{
-					level++;
+					phase++;
 					first = true;
 				}
 				break;
@@ -158,7 +158,7 @@ public class SplashScreen extends Activity
 
 				if (unzipped)
 				{
-					level++;
+					phase++;
 					first = true;
 				}
 				break;
@@ -175,7 +175,7 @@ public class SplashScreen extends Activity
 				editor.commit();
 
 				first = true;
-				level++;
+				phase++;
 				break;
 			case 5:
 				if (first)
@@ -218,7 +218,7 @@ public class SplashScreen extends Activity
 				//db.exportDB();
 
 				first = true;
-				level++;
+				phase++;
 				break;
 			case 6:
 				if (first)
@@ -296,12 +296,12 @@ public class SplashScreen extends Activity
 				{
 					myIntent.putExtra("long", longitude);
 					myIntent.putExtra("lat", latitude);
-					level++;
+					phase++;
 				}
 				break;
 			}
 
-			if (level < 7)
+			if (phase < 7)
 				handler.postDelayed(this, 1000);
 			else
 			{
@@ -324,7 +324,7 @@ public class SplashScreen extends Activity
 				if (!new File(Environment.getExternalStorageDirectory() + "/24Istanbul/map.zip").exists())
 				// Map was not downloaded.
 				{
-					level = 1;
+					phase = 1;
 				}
 				else
 				{
@@ -356,19 +356,19 @@ public class SplashScreen extends Activity
 					}
 
 					if (downloading)
-						level = 2;
+						phase = 2;
 					else
-						level = 3;
+						phase = 3;
 				}
 			}
 			else
 			{
-				level = 4;
+				phase = 4;
 			}
 
 		}
 
-		private boolean downloadComplated()
+		private boolean downloadCompleted()
 		{
 
 			if (downloadID == 0)
