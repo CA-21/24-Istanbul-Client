@@ -54,10 +54,9 @@ public class SplashScreen extends Activity
 	DatabaseHelper db;
 
 	private static final String apiUrl = "http://sw2.obcdn.net/api/"; 
-	
 
-	double longitude = 0;
-	double latitude = 0;
+	
+	boolean listenerReady = false;
 
 	private static final long MIN_DISTANCE_CHANGE_FOR_UPDATES = 10; // 10 meters
     private static final long MIN_TIME_BW_UPDATES = 1000 * 60 * 1; // 1 minute
@@ -120,7 +119,7 @@ public class SplashScreen extends Activity
 				// TODO: check this
 				// if there is no connection or 24 hours have passed since the last update
 				if (!internet || System.currentTimeMillis() / 1000L - lastUpdate < 86400) // 24hours
-					phase++;
+					phase = 6;
 			}
 
 			switch (phase)
@@ -165,7 +164,7 @@ public class SplashScreen extends Activity
 			case 4:
 				if (first)
 				{
-					textView.setText("Database is updating.");
+					textView.setText("Last update date is checking.");
 					first = false;
 				}
 
@@ -210,7 +209,7 @@ public class SplashScreen extends Activity
 				{
 					e.printStackTrace();
 				}
-
+				
 				JSONParser.parsePois(poiJsonResult, db);
 				JSONParser.parseQuestions(questionJsonResult, db);
 				JSONParser.parseCategories(categoryJsonResult, db);
@@ -248,56 +247,25 @@ public class SplashScreen extends Activity
 					}
 					else
 					{
-						if (isNetworkEnabled)
-						{
-							locationManager.requestLocationUpdates(
-									LocationManager.NETWORK_PROVIDER,
-									MIN_TIME_BW_UPDATES,
-									MIN_DISTANCE_CHANGE_FOR_UPDATES, this);
-							Log.d("Network", "Network Enabled");
-							if (locationManager != null)
-							{
-								location = locationManager
-										.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-								if (location != null)
-								{
-									latitude = location.getLatitude();
-									longitude = location.getLongitude();
-								}
-							}
-						}
-
-						if (isGPSEnabled)
-						{
-							if (location == null)
-							{
-								locationManager.requestLocationUpdates(
-										LocationManager.GPS_PROVIDER,
-										MIN_TIME_BW_UPDATES,
-										MIN_DISTANCE_CHANGE_FOR_UPDATES, this);
-								Log.d("GPS", "GPS Enabled");
-								if (locationManager != null)
-								{
-									location = locationManager
-											.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-									if (location != null)
-									{
-										latitude = location.getLatitude();
-										longitude = location.getLongitude();
-									}
-								}
-							}
-						}
+						CurrentLocation locListener = new CurrentLocation();
+						locationManager.requestLocationUpdates(
+								LocationManager.GPS_PROVIDER,
+								MIN_TIME_BW_UPDATES,
+								MIN_DISTANCE_CHANGE_FOR_UPDATES, locListener);
+						
+						locationManager.requestLocationUpdates(
+								LocationManager.NETWORK_PROVIDER,
+								MIN_TIME_BW_UPDATES,
+								MIN_DISTANCE_CHANGE_FOR_UPDATES, locListener);
+					
+						listenerReady = true;
 					}
+					
 
 				}
-
-				if (location != null)
-				{
-					myIntent.putExtra("long", longitude);
-					myIntent.putExtra("lat", latitude);
+				else if(listenerReady)
 					phase++;
-				}
+
 				break;
 			}
 
