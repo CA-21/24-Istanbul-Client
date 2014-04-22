@@ -4,6 +4,8 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:weightSum="1"
+    android:background="@drawable/istanbul1"
+    
     tools:context=".MainActivity" >
 
     <Button
@@ -11,6 +13,9 @@
         android:layout_width="fill_parent"
         android:layout_height="0dp"
         android:layout_weight="0.2"
+        android:alpha="0.7"
+       android:textStyle="bold"
+        
         android:onClick="startQuestionActivity"
         android:text="@string/eat" />
     
@@ -19,6 +24,9 @@
         android:layout_width="fill_parent"
         android:layout_height="0dp"
         android:layout_weight="0.2"
+        android:alpha="0.7"
+       android:textStyle="bold"
+    
         android:onClick="startQuestionActivity"
         android:text="@string/attraction" />
         
@@ -27,6 +35,9 @@
         android:layout_width="fill_parent"
         android:layout_height="0dp"
         android:layout_weight="0.2"
+        android:alpha="0.7"
+       android:textStyle="bold"
+        
         android:onClick="startQuestionActivity"
         android:text="@string/go" />
 
@@ -37,6 +48,9 @@
         android:layout_height="0dp"
         android:layout_weight="0.2"
         android:onClick="routeDemo"
+        android:alpha="0.7"
+       android:textStyle="bold"
+        
         android:text="@string/routeDemo" />
 
     <Button
@@ -45,6 +59,9 @@
         android:layout_height="0dp"
         android:layout_weight="0.2"
         android:onClick="shareDemo"
+        android:alpha="0.7"
+       android:textStyle="bold"
+        
         android:text="@string/shareDemo" />
 
 </LinearLayout>
