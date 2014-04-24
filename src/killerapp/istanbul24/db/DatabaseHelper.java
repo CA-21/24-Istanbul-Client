@@ -239,7 +239,7 @@ public class DatabaseHelper extends SQLiteOpenHelper
 		SQLiteDatabase db = this.getReadableDatabase();
 
 		String selectQuery = "SELECT  * FROM " + TABLE_OPTION + " WHERE "
-				+ KEY_ID + " = " + questionId;
+				+ KEY_QUESTION_ID + " = " + questionId;
 
 		Cursor c = db.rawQuery(selectQuery, null);
 

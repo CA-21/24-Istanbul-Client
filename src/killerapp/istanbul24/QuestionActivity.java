@@ -1,7 +1,6 @@
 package killerapp.istanbul24;
 
 import java.util.ArrayList;
-import java.util.Random;
 
 import killerapp.istanbul24.db.DatabaseHelper;
 import killerapp.istanbul24.db.Option;
@@ -50,7 +49,7 @@ public class QuestionActivity extends Activity implements OnClickListener
 		venues = intent.getParcelableArrayListExtra("venues");
 		questions = intent.getIntegerArrayListExtra("questions");
 
-		Random rand = new Random();
+		//Random rand = new Random();
 		
 		int questionID = 1;
 		// TODO: get random question id and remove it from arraylist
@@ -67,7 +66,7 @@ public class QuestionActivity extends Activity implements OnClickListener
 		Button skip = (Button) findViewById(R.id.skip);
 
 		button1.setText(options.get(0).getName());
-		//button2.setText(options.get(1).getName());
+		button2.setText(options.get(1).getName());
 		skip.setText("Skip this question");
 
 		// TODO: onClick listeners will be added for each button
@@ -126,6 +125,14 @@ public class QuestionActivity extends Activity implements OnClickListener
 		}
 
 
+	}
+	
+	@Override
+	protected void onDestroy()
+	{
+		super.onDestroy();
+		if (db != null)
+			db.close();
 	}
 
 }
