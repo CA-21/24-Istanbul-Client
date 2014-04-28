@@ -390,19 +390,20 @@ public class DatabaseHelper extends SQLiteOpenHelper
 				TABLE_VENUE + "." + KEY_LATITUDE + " > " + (latitude - radius)
 				;
 		
-		Log.d("query", selectQuery);
 
 		Cursor c = db.rawQuery(selectQuery, null);
 
 		if (c != null)
 		{
 			while (c.moveToNext())
-				list.add(new Venue(c.getString(c.getColumnIndex(KEY_ID)), c.getString(c
+			{
+				list.add(new Venue(c.getString(c.getColumnIndex(KEY_VENUE_ID)), c.getString(c
 						.getColumnIndex(KEY_ADDRESS)), c.getString(c
 						.getColumnIndex(KEY_NAME)), c.getDouble(c
 						.getColumnIndex(KEY_LONGITUDE)), c.getDouble(c
 						.getColumnIndex(KEY_LATITUDE)), c.getString(c
 						.getColumnIndex(KEY_LAST_UPDATE_DATE))));
+			}
 		}
 
 		c.close();

@@ -31,23 +31,24 @@ public class ResultActivity extends Activity
 	{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_result);
-		
+
 		instance = this;
 		Intent intent = getIntent();
 		venues = intent.getParcelableArrayListExtra("venues");
+		venues = sortVenues(venues);
 		ArrayList<String> nameList = new ArrayList<String>();
-		
-		for(Venue venue:venues)
-			nameList.add(venue.getName());
-		
-		ListView listView = (ListView)this.findViewById(R.id.listView_items);
-		
-		ArrayAdapter<String> itemAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1,nameList);
-        listView.setAdapter(itemAdapter);
-        
 
-        
-        listView.setOnItemClickListener(new OnItemClickListener()
+		for (Venue venue : venues)
+		{
+			nameList.add(venue.getName());
+		}
+
+		ListView listView = (ListView) this.findViewById(R.id.listView_items);
+
+		ArrayAdapter<String> itemAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, nameList);
+		listView.setAdapter(itemAdapter);
+
+		listView.setOnItemClickListener(new OnItemClickListener()
 		{
 			@Override
 			public void onItemClick(AdapterView<?> arg0, View arg1,
@@ -61,19 +62,43 @@ public class ResultActivity extends Activity
 				GeoPoint end = new GeoPoint(venues.get(position).getLatitude(),
 						venues.get(position).getLongitude());
 
-        		Intent intent = new Intent(ResultActivity.getInstance(), RouteActivity.class);
-        		intent.putExtra("start", start);
-        		intent.putExtra("end", end);
-        		startActivity(intent);
-            }
+				Intent intent = new Intent(ResultActivity.getInstance(), RouteActivity.class);
+				intent.putExtra("start", start);
+				intent.putExtra("end", end);
+				startActivity(intent);
+			}
 		});
-        
-        
+
 	}
-	
+
 	private static ResultActivity getInstance()
 	{
 		return instance;
+	}
+
+	private ArrayList<Venue> sortVenues(ArrayList<Venue> oldVenues)
+	{
+		ArrayList<Venue> newVenues = new ArrayList<Venue>();
+		int venueCount = oldVenues.size();
+		Venue smallest;
+
+		for (int i = 0; i < venueCount; i++)
+		{
+			smallest = oldVenues.get(0);
+			
+			for (Venue venue : oldVenues)
+			{
+				if(smallest.getFakeDistance() > venue.getFakeDistance())
+				{
+					smallest = venue;
+				}
+			}
+			
+			newVenues.add(smallest);
+			oldVenues.remove(smallest);
+		}
+
+		return newVenues;
 	}
 
 }

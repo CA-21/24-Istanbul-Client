@@ -1,7 +1,9 @@
 package killerapp.istanbul24.db;
 
+import killerapp.istanbul24.CurrentLocation;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.util.Log;
 
 /**
  * Model class for the venue entity.
@@ -15,6 +17,7 @@ public final class Venue implements Parcelable
 	private double longitude;
 	private double latitude;
 	private String lastUpdateDate;
+	private double fakeDistance = -1;
 	
 	public Venue(String id, String address, String name, double longitude,
 			double latitude, String lastUpdateDate)
@@ -127,4 +130,17 @@ public final class Venue implements Parcelable
 			return new Venue[size];
 		}
 	};
+	
+	
+	public double getFakeDistance()
+	{
+		if(fakeDistance == -1)
+		{
+			fakeDistance = Math.sqrt(
+				(longitude - CurrentLocation.longitude) * (longitude - CurrentLocation.longitude)
+				+ (latitude - CurrentLocation.latitude) * (latitude - CurrentLocation.latitude));
+		}
+		
+		return fakeDistance;
+	}
 }
