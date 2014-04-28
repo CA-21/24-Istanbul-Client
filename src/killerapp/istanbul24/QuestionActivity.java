@@ -52,8 +52,7 @@ public class QuestionActivity extends Activity implements OnClickListener
 		
 		int questionIndex = new Random().nextInt(questions.size());
 		int questionID = questions.get(questionIndex);
-		
-		   Log.d("list",""+venues.size());
+
         
 		question = db.getQuestion(questionID);//new Question(questionID, db);
 		questionView.setText(question.getQuestion());
@@ -113,8 +112,6 @@ public class QuestionActivity extends Activity implements OnClickListener
 			
 		}
 		
-		Log.d("venues",venues.size()+"");
-
 		if (questionCount < 5 && venues.size() < 5 && questions.size()>0)
 		{
 			Intent intent = new Intent(getBaseContext(), QuestionActivity.class);
