@@ -92,6 +92,7 @@ public class SplashScreen extends Activity
 		@Override
 		public void run()
 		{
+			Log.d("phase", phase + "");
 			if (phase == 0)
 			{
 				init();

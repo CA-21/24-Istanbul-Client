@@ -81,7 +81,7 @@ public class RouteActivity extends MapActivity
 	private GraphHopperAPI hopper;
 	private GeoPoint start, end, midPoint;
 	private static final String CURRENT_AREA = "istanbul";
-
+	
 	private ListOverlay pathOverlay = new ListOverlay();
 
 	// private volatile boolean shortestPathRunning = false;

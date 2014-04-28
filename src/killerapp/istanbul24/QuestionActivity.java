@@ -1,6 +1,7 @@
 package killerapp.istanbul24;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 import killerapp.istanbul24.db.DatabaseHelper;
 import killerapp.istanbul24.db.Option;
@@ -44,16 +45,16 @@ public class QuestionActivity extends Activity implements OnClickListener
 
 		Intent intent = getIntent();
 
-		selected = intent.getIntegerArrayListExtra("selected");
+		//selected = intent.getIntegerArrayListExtra("selected");
 		questionCount = intent.getIntExtra("question", 0);
 		venues = intent.getParcelableArrayListExtra("venues");
 		questions = intent.getIntegerArrayListExtra("questions");
-
-		//Random rand = new Random();
 		
-		int questionID = 1;
-		// TODO: get random question id and remove it from arraylist
+		int questionIndex = new Random().nextInt(questions.size());
+		int questionID = questions.get(questionIndex);
 		
+		   Log.d("list",""+venues.size());
+        
 		question = db.getQuestion(questionID);//new Question(questionID, db);
 		questionView.setText(question.getQuestion());
 
@@ -73,6 +74,8 @@ public class QuestionActivity extends Activity implements OnClickListener
 		button1.setOnClickListener(this);
 		button2.setOnClickListener(this);
 		skip.setOnClickListener(this);
+		
+		questions.remove(question);
 
 	}
 
@@ -98,7 +101,10 @@ public class QuestionActivity extends Activity implements OnClickListener
 			
 			if(newTag != -1)
 			{
-				selected.add(newTag);				
+//				if(selected == null) {
+//					selected = new ArrayList<Integer>();
+//				}
+//				selected.add(newTag);				
 				venues.addAll(db.getVenues(newTag, CurrentLocation.longitude, CurrentLocation.latitude));
 			}
 
@@ -106,15 +112,19 @@ public class QuestionActivity extends Activity implements OnClickListener
 
 			
 		}
+		
+		Log.d("venues",venues.size()+"");
 
-		if (questionCount < 5 && venues.size() < 5)
+		if (questionCount < 5 && venues.size() < 5 && questions.size()>0)
 		{
-			Intent intent = new Intent(this, QuestionActivity.class);
+			Intent intent = new Intent(getBaseContext(), QuestionActivity.class);
 			intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-			intent.putExtra("selected", selected);
+//			intent.putIntegerArrayListExtra("selected", selected);
+			intent.putIntegerArrayListExtra("questions", questions);
 			intent.putExtra("question", questionCount);
 			intent.putParcelableArrayListExtra("venues", venues);
 			startActivity(intent); // Activity is created.
+
 		}
 		else
 		{

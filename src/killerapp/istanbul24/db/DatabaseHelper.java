@@ -258,7 +258,7 @@ public class DatabaseHelper extends SQLiteOpenHelper
 		return list;
 	}
 
-	public ArrayList<Question> getQuestions(int categoryId)
+	public ArrayList<Integer> getQuestions(int categoryId)
 	{
 		SQLiteDatabase db = this.getReadableDatabase();
 
@@ -267,14 +267,11 @@ public class DatabaseHelper extends SQLiteOpenHelper
 
 		Cursor c = db.rawQuery(selectQuery, null);
 
-		ArrayList<Question> list = new ArrayList<Question>();
+		ArrayList<Integer> list = new ArrayList<Integer>();
 		if (c != null)
 		{
 			while (c.moveToNext())
-				list.add(new Question(c.getInt(c.getColumnIndex(KEY_ID)), c
-						.getInt(c.getColumnIndex(KEY_CATEGORY_ID)), c
-						.getString(c.getColumnIndex(KEY_QUESTION)), c
-						.getString(c.getColumnIndex(KEY_LAST_UPDATE_DATE))));
+				list.add(c.getInt(c.getColumnIndex(KEY_ID)));
 		}
 
 		c.close();
@@ -384,26 +381,28 @@ public class DatabaseHelper extends SQLiteOpenHelper
 		
 		SQLiteDatabase db = this.getReadableDatabase();
 
-		String selectQuery = "SELECT " + TABLE_VENUE + "." + KEY_ID + " FROM " + TABLE_VENUE + ", " +
-				TABLE_VENUE_META + " WHERE " + TABLE_VENUE_META + "." + KEY_TAG_ID + " = " + tagId + " AND " +
+		String selectQuery = "SELECT DISTINCT * FROM " + TABLE_VENUE + " JOIN " + TABLE_VENUE_META +
+				" WHERE " + TABLE_VENUE + "." + KEY_ID + " = " + TABLE_VENUE_META + "." + KEY_VENUE_ID +
+				" AND " + KEY_TAG_ID + " = " + tagId + " AND " +
 				TABLE_VENUE + "." + KEY_LONGITUDE + " < " + (longitude + radius) + " AND " +
 				TABLE_VENUE + "." + KEY_LONGITUDE + " > " + (longitude - radius) + " AND " +
 				TABLE_VENUE + "." + KEY_LATITUDE + " < " + (latitude + radius) + " AND " +
-				TABLE_VENUE + "." + KEY_LATITUDE + " > " + (latitude - radius);
+				TABLE_VENUE + "." + KEY_LATITUDE + " > " + (latitude - radius)
+				;
+		
+		Log.d("query", selectQuery);
 
 		Cursor c = db.rawQuery(selectQuery, null);
 
 		if (c != null)
 		{
 			while (c.moveToNext())
-				list.add(
-						new Venue(c.getString(c.getColumnIndex(TABLE_VENUE+"."+KEY_ID)), c.getString(c
-								.getColumnIndex(KEY_ADDRESS)), c.getString(c
-								.getColumnIndex(KEY_NAME)), c.getDouble(c
-								.getColumnIndex(KEY_LONGITUDE)), c.getDouble(c
-								.getColumnIndex(KEY_LATITUDE)), c.getString(c
-								.getColumnIndex(KEY_LAST_UPDATE_DATE)))
-						);
+				list.add(new Venue(c.getString(c.getColumnIndex(KEY_ID)), c.getString(c
+						.getColumnIndex(KEY_ADDRESS)), c.getString(c
+						.getColumnIndex(KEY_NAME)), c.getDouble(c
+						.getColumnIndex(KEY_LONGITUDE)), c.getDouble(c
+						.getColumnIndex(KEY_LATITUDE)), c.getString(c
+						.getColumnIndex(KEY_LAST_UPDATE_DATE))));
 		}
 
 		c.close();

@@ -2,6 +2,7 @@ package killerapp.istanbul24;
 
 import java.util.ArrayList;
 
+import killerapp.istanbul24.db.DatabaseHelper;
 import killerapp.istanbul24.db.Venue;
 
 import org.mapsforge.core.model.GeoPoint;
@@ -80,20 +81,24 @@ public class MainActivity extends Activity
 
 	public void startQuestionActivity(View view)
 	{
-		ArrayList<Integer> questions = null;
-
-		// TODO: get questions for selected tag
+		int catID = 0;
+	
 		switch (view.getId())
 		{
 		case R.id.eatButton:
+			catID = 1;
 			break;
 		case R.id.attractionsButton:
+			catID = 2;
 			break;
 		case R.id.goButton:
+			catID = 3;
 			break;
 		}
+		
+		ArrayList<Integer> questions = new DatabaseHelper(this).getQuestions(catID);
 
-		ArrayList<Integer> selected = new ArrayList<Integer>(); // It is empty.
+//		ArrayList<Integer> selected = new ArrayList<Integer>(); // It is empty.
 																// Selected tags
 																// will add into
 																// this.
@@ -101,9 +106,9 @@ public class MainActivity extends Activity
 															// will add into
 															// this.
 
-		Intent intent = new Intent(this, QuestionActivity.class); // Intent is
+		Intent intent = new Intent(getBaseContext(), QuestionActivity.class); // Intent is
 																	// created.
-		intent.putExtra("selected", selected);
+//		intent.putExtra("selected", selected);
 		intent.putExtra("question", 0);
 		intent.putExtra("questions", questions);
 		intent.putParcelableArrayListExtra("venues", venues);
@@ -126,7 +131,15 @@ public class MainActivity extends Activity
 		 * GeoPoint end = new GeoPoint(41.011898495994, 28.97524428367614);
 		 */
 
-		GeoPoint start = new GeoPoint(41.0119, 28.925972);
+		
+		
+		while (CurrentLocation.latitude < 1 || CurrentLocation.longitude < 1)
+			;
+		
+		GeoPoint start = new GeoPoint(CurrentLocation.latitude,
+				CurrentLocation.longitude);
+		
+		
 		GeoPoint end = new GeoPoint(41.01177, 29.013519);
 
 		Intent intent = new Intent(this, RouteActivity.class);
