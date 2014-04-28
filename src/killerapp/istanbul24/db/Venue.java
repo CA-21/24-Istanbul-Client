@@ -115,7 +115,7 @@ public final class Venue implements Parcelable
 				Double.toString(this.latitude), this.lastUpdateDate });
 	}
 
-	public static final Parcelable.Creator CREATOR = new Parcelable.Creator()
+	public static final Parcelable.Creator<Venue> CREATOR = new Parcelable.Creator<Venue>()
 	{
 		public Venue createFromParcel(Parcel in)
 		{

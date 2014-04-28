@@ -98,14 +98,21 @@ public class QuestionActivity extends Activity implements OnClickListener
 		if (option != -1)
 		{
 			int newTag = options.get(option).getTagId();
-			
+		
 			if(newTag != -1)
 			{
 //				if(selected == null) {
 //					selected = new ArrayList<Integer>();
 //				}
-//				selected.add(newTag);				
-				venues.addAll(db.getVenues(newTag, CurrentLocation.longitude, CurrentLocation.latitude));
+//				selected.add(newTag);
+
+				ArrayList<Venue> venuesToAdd = db.getVenues(newTag,
+						CurrentLocation.longitude, CurrentLocation.latitude);
+				for (Venue venue : venuesToAdd)
+				{
+					if (!venues.contains(venue))
+						venues.add(venue);
+				}
 			}
 
 			questionCount++;
