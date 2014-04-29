@@ -9,7 +9,6 @@ import org.mapsforge.core.model.GeoPoint;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -24,7 +23,7 @@ import android.widget.ListView;
 public class ResultActivity extends Activity
 {
 	private ArrayList<Venue> venues;
-	private static ResultActivity instance;
+	private ResultActivity instance;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
@@ -62,18 +61,13 @@ public class ResultActivity extends Activity
 				GeoPoint end = new GeoPoint(venues.get(position).getLatitude(),
 						venues.get(position).getLongitude());
 
-				Intent intent = new Intent(ResultActivity.getInstance(), RouteActivity.class);
+				Intent intent = new Intent(instance, RouteActivity.class);
 				intent.putExtra("start", start);
 				intent.putExtra("end", end);
 				startActivity(intent);
 			}
 		});
 
-	}
-
-	private static ResultActivity getInstance()
-	{
-		return instance;
 	}
 
 	private ArrayList<Venue> sortVenues(ArrayList<Venue> oldVenues)
