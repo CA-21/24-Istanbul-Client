@@ -95,4 +95,37 @@ public class ResultActivity extends Activity
 		return newVenues;
 	}
 
+	private double calculateDistance(double lat1, double lon1, double lat2,
+			double lon2)
+	{
+		double theta = lon1 - lon2;
+		double dist = Math.sin(deg2rad(lat1)) * Math.sin(deg2rad(lat2))
+				+ Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2))
+				* Math.cos(deg2rad(theta));
+
+		dist = Math.acos(dist);
+		dist = rad2deg(dist);
+		dist = dist * 111.18957696;
+
+		return (dist);
+	}
+
+	private double deg2rad(double deg)
+	{
+		// multiply with (PI / 180.0)
+		return (deg * 0.017453292519943278);
+	}
+
+	private double rad2deg(double rad)
+	{
+		// multiply with (180.0 / PI)
+		return (rad * 57.29577951308238);
+	}
+
+	private double calculateDistance(GeoPoint p1, GeoPoint p2)
+	{
+		return calculateDistance(p1.latitude, p1.longitude, p2.latitude,
+				p2.longitude);
+	}
+
 }
