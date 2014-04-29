@@ -117,7 +117,7 @@ public class QuestionActivity extends Activity implements OnClickListener
 						isFound = false;
 						for (Venue venue : venues)
 						{
-							if (venue.equals(venueToAdd.getId()))
+							if (venue.equals(venueToAdd))
 							{
 								isFound = true;
 								break;
