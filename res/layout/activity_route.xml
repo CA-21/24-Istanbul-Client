@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal"
+    android:weightSum="1" >
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="0.1"
+        android:orientation="vertical"
+        android:weightSum="1" >
+
+        <Button
+            android:id="@+id/infoButton"
+            android:layout_width="fill_parent"
+            android:layout_height="50dp"
+            android:alpha="0.7"
+            android:background="@drawable/info"
+            android:onClick="infoButton"
+            android:layout_marginTop="10dp"
+            android:textStyle="bold" />
+
+        <Button
+            android:id="@+id/shareButton"
+            android:layout_width="fill_parent"
+            android:layout_height="50dp"
+            android:alpha="0.7"
+            android:background="@drawable/share"
+            android:onClick="shareButton"
+            android:layout_marginBottom="10dp"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="fill_parent"
+        android:layout_weight="0.9"
+        android:orientation="vertical" >
+
+        <TextView
+            android:id="@+id/infoText"
+            android:layout_width="fill_parent"
+            android:layout_height="100dp"
+            android:alpha="0.5"
+            android:background="#000000"
+            android:textColor="#ffffff"
+            android:gravity="center"
+            android:onClick="infoButton"
+            android:layout_margin="10dp"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+</LinearLayout>

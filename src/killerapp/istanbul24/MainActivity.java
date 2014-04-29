@@ -125,14 +125,5 @@ public class MainActivity extends Activity
 	}
 
 
-	public void shareDemo(View view)
-	{
-		Intent intent = new Intent(Intent.ACTION_SEND);
-		intent.setType("text/plain");
-		intent.putExtra(Intent.EXTRA_TEXT, "I found this awesome place with 24Istanbul.");
-
-		// startActivity(Intent.createChooser(fbIntent(), "Share with"));
-		startActivity(intent);
-	}
 
 }

@@ -12,6 +12,8 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import killerapp.istanbul24.db.Venue;
+
 import org.mapsforge.android.maps.MapActivity;
 import org.mapsforge.android.maps.MapView;
 import org.mapsforge.android.maps.overlay.ListOverlay;
@@ -36,7 +38,12 @@ import android.util.Log;
 import android.view.GestureDetector;
 import android.view.GestureDetector.SimpleOnGestureListener;
 import android.view.MotionEvent;
+import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
+import android.widget.Button;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.graphhopper.GHRequest;
@@ -50,8 +57,8 @@ import com.graphhopper.util.PointList;
 import com.graphhopper.util.StopWatch;
 
 /**
- * Handles routing and map rendering. Start and end points are
- * passed as extra data inside the intent.
+ * Handles routing and map rendering. Start and end points are passed as extra
+ * data inside the intent.
  * 
  */
 public class RouteActivity extends MapActivity
@@ -81,7 +88,8 @@ public class RouteActivity extends MapActivity
 	private GraphHopperAPI hopper;
 	private GeoPoint start, end, midPoint;
 	private static final String CURRENT_AREA = "istanbul";
-	
+	private Venue venue;
+
 	private ListOverlay pathOverlay = new ListOverlay();
 
 	// private volatile boolean shortestPathRunning = false;
@@ -117,71 +125,70 @@ public class RouteActivity extends MapActivity
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		super.onCreate(savedInstanceState);
 
-		//bbox = new BoundingBox(40.9480, 28.9126, 41.0928, 29.1666);
+		// bbox = new BoundingBox(40.9480, 28.9126, 41.0928, 29.1666);
 		mapView = new MapView(this)
 		{
 			@Override
 			public boolean onTouchEvent(MotionEvent event)
 			{
-//				BoundingBox bb = this.getMapViewPosition().getBoundingBox();
-//				boolean moveCenter = false;
-//				double x = 0, y = 0;
+				// BoundingBox bb = this.getMapViewPosition().getBoundingBox();
+				// boolean moveCenter = false;
+				// double x = 0, y = 0;
 
-//				log(bb.minLatitude + "," + bb.minLongitude + ","
-//						+ bb.maxLatitude + "," + bb.maxLongitude);
-//				log(bbox.minLatitude + "," + bbox.minLongitude + ","
-//						+ bbox.maxLatitude + "," + bbox.maxLongitude);
-//				log("");
+				// log(bb.minLatitude + "," + bb.minLongitude + ","
+				// + bb.maxLatitude + "," + bb.maxLongitude);
+				// log(bbox.minLatitude + "," + bbox.minLongitude + ","
+				// + bbox.maxLatitude + "," + bbox.maxLongitude);
+				// log("");
 
 				if (gestureDetector.onTouchEvent(event))
 				{
-
 					return true;
 				}
 
-//				if (bbox.minLatitude > bb.minLatitude)
-//				{
-//					moveCenter = true;
-//					y += bb.getLatitudeSpan() / 2;
-//				}
-//				else if (bbox.maxLatitude < bb.maxLatitude)
-//				{
-//					moveCenter = true;
-//					y -= bb.getLatitudeSpan() / 2;
-//					//log("aaaa, " + bb.maxLatitude);
-//				}
-//				
-//				if (bbox.minLongitude > bb.minLongitude)
-//				{
-//					moveCenter = true;
-//					x += bb.getLongitudeSpan() / 2;
-//				}
-//				else if (bbox.maxLongitude < bb.maxLongitude)
-//				{
-//					moveCenter = true;
-//					x -= bb.getLongitudeSpan() / 2;
-//				}
-//
-//				log(x + ", " + y);
-//				if (moveCenter)
-//				{
-//					if (y < 0)
-//						y += bbox.maxLatitude;
-//					else if (y > 0)
-//						y += bbox.minLatitude;
-//					
-//					if (x < 0)
-//						x += bbox.maxLongitude;
-//					else if (x > 0)
-//						x += bbox.minLongitude;
-//					
-//					
-//					GeoPoint newCenter = new GeoPoint(y, x);
-//
-//					this.getMapViewPosition().setCenter(newCenter);
-//					
-//					return false;
-//				}
+				// if (bbox.minLatitude > bb.minLatitude)
+				// {
+				// moveCenter = true;
+				// y += bb.getLatitudeSpan() / 2;
+				// }
+				// else if (bbox.maxLatitude < bb.maxLatitude)
+				// {
+				// moveCenter = true;
+				// y -= bb.getLatitudeSpan() / 2;
+				// //log("aaaa, " + bb.maxLatitude);
+				// }
+				//
+				// if (bbox.minLongitude > bb.minLongitude)
+				// {
+				// moveCenter = true;
+				// x += bb.getLongitudeSpan() / 2;
+				// }
+				// else if (bbox.maxLongitude < bb.maxLongitude)
+				// {
+				// moveCenter = true;
+				// x -= bb.getLongitudeSpan() / 2;
+				// }
+				//
+				// log(x + ", " + y);
+				// if (moveCenter)
+				// {
+				// if (y < 0)
+				// y += bbox.maxLatitude;
+				// else if (y > 0)
+				// y += bbox.minLatitude;
+				//
+				// if (x < 0)
+				// x += bbox.maxLongitude;
+				// else if (x > 0)
+				// x += bbox.minLongitude;
+				//
+				//
+				// GeoPoint newCenter = new GeoPoint(y, x);
+				//
+				// this.getMapViewPosition().setCenter(newCenter);
+				//
+				// return false;
+				// }
 
 				return super.onTouchEvent(event);
 
@@ -250,6 +257,7 @@ public class RouteActivity extends MapActivity
 		Intent intent = getIntent();
 		start = (GeoPoint) intent.getSerializableExtra("start");
 		end = (GeoPoint) intent.getSerializableExtra("end");
+		venue = (Venue) intent.getSerializableExtra("venue");
 
 		// Draw the route
 
@@ -266,6 +274,9 @@ public class RouteActivity extends MapActivity
 			calcPath(start.latitude, start.longitude, end.latitude,
 					end.longitude);
 		}
+		
+
+
 	}
 
 	private Marker createMarker(GeoPoint p, int resource)
@@ -286,8 +297,7 @@ public class RouteActivity extends MapActivity
 			protected GHResponse doInBackground(Void... v)
 			{
 				// Wait for the preparation of the map and/or graph
-				while (prepareInProgress)
-					;
+				while (prepareInProgress);
 
 				StopWatch sw = new StopWatch().start();
 				GHRequest req = new GHRequest(fromLat, fromLon, toLat, toLon)
@@ -313,6 +323,8 @@ public class RouteActivity extends MapActivity
 				if (!resp.hasErrors())
 				{
 					double distance = resp.getDistance();
+					
+
 
 					log("from:" + fromLat + "," + fromLon + " to:" + toLat
 							+ "," + toLon + " found path with distance:"
@@ -327,6 +339,8 @@ public class RouteActivity extends MapActivity
 					toastText += (DEBUG) ? ", debug:" + time : "";
 
 					logUser(toastText);
+					
+					
 
 					// center the start point
 					// mapView.getMapViewPosition().setCenter(start);
@@ -357,6 +371,12 @@ public class RouteActivity extends MapActivity
 
 					pathOverlay.getOverlayItems().add(createPolyline(resp));
 					mapView.redraw();
+					
+					TextView textView = (TextView) findViewById(R.id.infoText);
+					textView.setText(venue.getName()+"\n(Distance: "+String.format("%.02f", distance)+"m)");
+					
+					if(!venue.getAddress().equals("null"))
+						textView.append("\n"+venue.getAddress());
 				}
 				else
 				{
@@ -420,6 +440,9 @@ public class RouteActivity extends MapActivity
 			return;
 		}
 		setContentView(mapView);
+		addContentView(getLayoutInflater().inflate(R.layout.activity_route, null),
+				new ViewGroup.LayoutParams(ViewGroup.LayoutParams.FILL_PARENT,
+						ViewGroup.LayoutParams.FILL_PARENT));
 
 		mapView.getOverlays().clear();
 		mapView.getOverlays().add(pathOverlay);
@@ -474,6 +497,34 @@ public class RouteActivity extends MapActivity
 	private void finishPrepare()
 	{
 		prepareInProgress = false;
+	}
+
+	public void infoButton(View view)
+	{
+		TextView textView = (TextView) findViewById(R.id.infoText);
+		Button button = (Button) findViewById(R.id.infoButton);
+
+		if (textView.getVisibility() == textView.VISIBLE)
+		{
+			textView.setVisibility(textView.INVISIBLE);
+		}
+		else
+		{
+			textView.setVisibility(textView.VISIBLE);
+		}
+
+	}
+	
+	public void shareButton(View view)
+	{
+		TextView textView = (TextView) findViewById(R.id.infoText);
+		
+		Intent intent = new Intent(Intent.ACTION_SEND);
+		intent.setType("text/plain");
+		intent.putExtra(Intent.EXTRA_TEXT, "I found this awesome place with 24Istanbul:\n"+textView.getText());
+
+		// startActivity(Intent.createChooser(fbIntent(), "Share with"));
+		startActivity(intent);
 	}
 
 }
