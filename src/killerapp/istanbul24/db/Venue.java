@@ -131,7 +131,6 @@ public final class Venue implements Parcelable
 		}
 	};
 	
-	
 	public double getFakeDistance()
 	{
 		if(fakeDistance == -1)
@@ -142,5 +141,32 @@ public final class Venue implements Parcelable
 		}
 		
 		return fakeDistance;
+	}
+	
+	/**
+	 * Compares venues based on their id strings. Checks if these are duplicates
+	 * with different coordinates.
+	 */
+	@Override
+	public boolean equals(Object o)
+	{
+		if (!(o instanceof Venue))
+			return false;
+
+		Venue other = (Venue) o;
+
+		if (other.id.equals(this.id))
+		{
+			if (Double.compare(other.latitude, this.latitude) == 0)
+				return true;
+			else
+			{
+				Log.d("24Istanbul-Error",
+						"Duplicate venue with different coordinates.");
+				return false;
+			}
+		}
+		
+		return false;
 	}
 }
