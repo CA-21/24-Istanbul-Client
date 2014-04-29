@@ -2,18 +2,22 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/istanbul5"
     android:paddingBottom="@dimen/activity_vertical_margin"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    android:background="@drawable/istanbul5"
-    
     tools:context=".ResultActivity" >
 
     <ListView
-            android:id="@+id/listView_items"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent" >
-        </ListView>
+        android:id="@+id/listView_items"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_marginTop="2dp"
+        android:alpha="0.6"
+        android:background="#ffffff"
+        android:textColor="#000000"
+        android:textStyle="bold" >
+    </ListView>
 
 </RelativeLayout>

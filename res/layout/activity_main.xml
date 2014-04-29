@@ -2,10 +2,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:weightSum="1"
     android:background="@drawable/istanbul1"
-    
+    android:orientation="vertical"
     tools:context=".MainActivity" >
 
     <Button
@@ -14,54 +12,38 @@
         android:layout_height="0dp"
         android:layout_weight="0.2"
         android:alpha="0.7"
-       android:textStyle="bold"
-        
         android:onClick="startQuestionActivity"
-        android:text="@string/eat" />
-    
-        <Button
+        android:text="@string/eat"
+        android:textStyle="bold" />
+
+    <Button
         android:id="@+id/attractionsButton"
         android:layout_width="fill_parent"
         android:layout_height="0dp"
         android:layout_weight="0.2"
         android:alpha="0.7"
-       android:textStyle="bold"
-    
         android:onClick="startQuestionActivity"
-        android:text="@string/attraction" />
-        
-            <Button
+        android:text="@string/attraction"
+        android:textStyle="bold" />
+
+    <Button
         android:id="@+id/goButton"
         android:layout_width="fill_parent"
         android:layout_height="0dp"
         android:layout_weight="0.2"
         android:alpha="0.7"
-       android:textStyle="bold"
-        
         android:onClick="startQuestionActivity"
-        android:text="@string/go" />
-
-
-    <Button
-        android:id="@+id/routeButton"
-        android:layout_width="fill_parent"
-        android:layout_height="0dp"
-        android:layout_weight="0.2"
-        android:onClick="routeDemo"
-        android:alpha="0.7"
-       android:textStyle="bold"
-        
-        android:text="@string/routeDemo" />
+        android:text="@string/go"
+        android:textStyle="bold" />
 
     <Button
         android:id="@+id/shareButton"
         android:layout_width="fill_parent"
         android:layout_height="0dp"
         android:layout_weight="0.2"
-        android:onClick="shareDemo"
         android:alpha="0.7"
-       android:textStyle="bold"
-        
-        android:text="@string/shareDemo" />
+        android:onClick="shareDemo"
+        android:text="@string/shareDemo"
+        android:textStyle="bold" />
 
 </LinearLayout>

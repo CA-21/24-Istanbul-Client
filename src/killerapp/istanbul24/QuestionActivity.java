@@ -74,7 +74,7 @@ public class QuestionActivity extends Activity implements OnClickListener
 		button2.setOnClickListener(this);
 		skip.setOnClickListener(this);
 		
-		questions.remove(question);
+		questions.remove(new Integer(questionID));
 
 	}
 

@@ -115,39 +115,6 @@ public class MainActivity extends Activity
 		startActivity(intent); // Activity is created.
 	}
 
-	public void routeDemo(View view)
-	{
-		// If can't unzip and can't find the map directory, stop
-		if (!Download.unzip() && !Download.getDir().exists())
-		{
-			Toast.makeText(this, "Please download the map.", Toast.LENGTH_LONG)
-					.show();
-			return;
-		}
-		else
-			Download.deleteZip();
-		/*
-		 * GeoPoint start = new GeoPoint(41.02546548103654, 28.968420743942254);
-		 * GeoPoint end = new GeoPoint(41.011898495994, 28.97524428367614);
-		 */
-
-		
-		
-		while (CurrentLocation.latitude < 1 || CurrentLocation.longitude < 1)
-			;
-		
-		GeoPoint start = new GeoPoint(CurrentLocation.latitude,
-				CurrentLocation.longitude);
-		
-		
-		GeoPoint end = new GeoPoint(41.01177, 29.013519);
-
-		Intent intent = new Intent(this, RouteActivity.class);
-		intent.putExtra("start", start);
-		intent.putExtra("end", end);
-		startActivity(intent);
-
-	}
 
 	public void shareDemo(View view)
 	{
