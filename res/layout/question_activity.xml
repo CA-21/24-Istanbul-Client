@@ -10,20 +10,21 @@
         android:id="@+id/questionView"
         android:layout_width="fill_parent"
         android:layout_height="0dp"
+        android:layout_margin="10dp"
         android:layout_weight="0.3"
-        android:alpha="0.6"
-        android:background="#ffffff"
+        android:background="@drawable/white_button"
         android:gravity="center"
-        android:textSize="20dp" />
+        android:textSize="20dp"
+        android:textStyle="bold" />
 
     <Button
         android:id="@+id/button1"
         android:layout_width="fill_parent"
         android:layout_height="0dp"
+        android:layout_margin="5dp"
         android:layout_marginTop="2dp"
         android:layout_weight="0.2"
-        android:alpha="0.6"
-        android:background="#000000"
+        android:background="@drawable/black_button"
         android:textColor="#ffffff"
         android:textStyle="bold" />
 
@@ -31,10 +32,10 @@
         android:id="@+id/button2"
         android:layout_width="fill_parent"
         android:layout_height="0dp"
+        android:layout_margin="5dp"
         android:layout_marginTop="2dp"
         android:layout_weight="0.2"
-        android:alpha="0.6"
-        android:background="#000000"
+        android:background="@drawable/black_button"
         android:textColor="#ffffff"
         android:textStyle="bold" />
 
@@ -42,10 +43,10 @@
         android:id="@+id/skip"
         android:layout_width="fill_parent"
         android:layout_height="0dp"
+        android:layout_margin="5dp"
         android:layout_marginTop="2dp"
         android:layout_weight="0.2"
-        android:alpha="0.6"
-        android:background="#000000"
+        android:background="@drawable/black_button"
         android:textColor="#ffffff"
         android:textStyle="bold" />
 
