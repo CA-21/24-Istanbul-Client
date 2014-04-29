@@ -40,7 +40,9 @@ public class ResultActivity extends Activity
 
 		for (Venue venue : venues)
 		{
-			nameList.add(venue.getName());
+			GeoPoint geo1 = new GeoPoint(venue.getLatitude(), venue.getLongitude());
+			GeoPoint geo2 = new GeoPoint(CurrentLocation.latitude, CurrentLocation.longitude);
+			nameList.add(venue.getName() + " (~"+ (int)(calculateDistance(geo1, geo2)*1000)+"m)");
 		}
 
 		ListView listView = (ListView) this.findViewById(R.id.listView_items);
