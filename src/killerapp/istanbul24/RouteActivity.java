@@ -303,7 +303,8 @@ public class RouteActivity extends MapActivity
 				GHRequest req = new GHRequest(fromLat, fromLon, toLat, toLon)
 						.setAlgorithm("dijkstrabi")
 						.putHint("instructions", false)
-						.putHint("douglas.minprecision", 1);
+						.putHint("douglas.minprecision", 1)
+						.setVehicle("foot");
 
 				GraphHopper _gh = ((GraphHopper) hopper);
 
