@@ -108,21 +108,26 @@ public class QuestionActivity extends Activity implements OnClickListener
 				ArrayList<Venue> venuesToAdd = db.getVenues(newTag,
 						CurrentLocation.longitude, CurrentLocation.latitude);
 				
-				ArrayList<Venue> tempVenues = new ArrayList<Venue>();
+
+				boolean isFound = false;
 				
 				for (Venue venue : venuesToAdd)
 				{
 					if (venues.size() > 0)
 					{
+						isFound = false;
 						for (Venue addedVenue : venues)
 						{
 							if (addedVenue.getId() == venue.getId())
-								tempVenues.add(venue);
+							{
+								isFound = true;
+							}
 						}
-						
-						venues.addAll(tempVenues);
 					}
 					else
+						venues.add(venue);
+					
+					if(!isFound)
 						venues.add(venue);
 				}
 			}
