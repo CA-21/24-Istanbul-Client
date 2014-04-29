@@ -1,5 +1,7 @@
 package killerapp.istanbul24.db;
 
+import java.io.Serializable;
+
 import killerapp.istanbul24.CurrentLocation;
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -9,7 +11,7 @@ import android.util.Log;
  * Model class for the venue entity.
  * 
  */
-public final class Venue implements Parcelable
+public final class Venue implements Parcelable, Serializable
 {
 	private String id;
 	private String address;

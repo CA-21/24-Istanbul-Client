@@ -1,5 +1,6 @@
 package killerapp.istanbul24;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 import killerapp.istanbul24.db.Venue;
@@ -53,8 +54,6 @@ public class ResultActivity extends Activity
 			public void onItemClick(AdapterView<?> arg0, View arg1,
 					int position, long arg3)
 			{
-				// TODO: set intent and create RouteActivity
-
 				GeoPoint start = new GeoPoint(CurrentLocation.latitude,
 						CurrentLocation.longitude);
 
@@ -64,6 +63,7 @@ public class ResultActivity extends Activity
 				Intent intent = new Intent(instance, RouteActivity.class);
 				intent.putExtra("start", start);
 				intent.putExtra("end", end);
+				intent.putExtra("venue", (Serializable) venues.get(position));
 				startActivity(intent);
 			}
 		});
