@@ -40,7 +40,7 @@
             android:id="@+id/infoText"
             android:layout_width="fill_parent"
             android:layout_height="100dp"
-            android:background="#88ffffff"
+            android:background="@drawable/black_button"
             android:textColor="#ffffff"
             android:gravity="center"
             android:onClick="infoButton"
