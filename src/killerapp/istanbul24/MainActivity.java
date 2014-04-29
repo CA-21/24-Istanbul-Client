@@ -70,6 +70,18 @@ public class MainActivity extends Activity
 													.parseFloat(input.getText()
 															.toString());
 											
+											// limit range to 0.3
+											if (range > 0.3)
+											{
+												Log.d("24Istanbul","Range cannot be greater than 0.3");
+												range = 0.3f;
+											}
+											if (range < 0.001)
+											{
+												Log.d("24Istanbul","Range cannot be less than 0.001");
+												range = 0.001f;
+											}
+											
 											DatabaseHelper.radius = range;
 											Editor editor = getSharedPreferences(
 													"init", 0).edit();
