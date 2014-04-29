@@ -48,33 +48,42 @@ public class MainActivity extends Activity
 	{
 		switch (item.getItemId())
 		{
-		case R.id.settings_range_button:
-			final EditText input = new EditText(this);
-	        input.setInputType(InputType.TYPE_NUMBER_FLAG_DECIMAL);
-	        
-	        SharedPreferences init = getSharedPreferences("init", 0);
-	        input.setText(init.getFloat("range", 1)+"");
-			
-			new AlertDialog.Builder(this).setView(input).setTitle(R.string.settings_range)
-					.setNeutralButton("Ok", new DialogInterface.OnClickListener()
-					{
-						public void onClick(DialogInterface dialog, int whichButton)
-						{
-							try
-							{
-								float range = Float.parseFloat(input.getText().toString());
-								Editor editor = getSharedPreferences("init", 0).edit();
-								editor.putFloat("range", range);
-								editor.commit();
-							}
-							catch (NumberFormatException nfe)
-							{
+			case R.id.settings_range_button:
+				final EditText input = new EditText(this);
+				input.setInputType(InputType.TYPE_NUMBER_FLAG_DECIMAL);
 
-							}
+				SharedPreferences init = getSharedPreferences("init", 0);
+				input.setText(init.getFloat("range", 1) + "");
 
-						}
-					}).show();
-			break;
+				new AlertDialog.Builder(this)
+						.setView(input)
+						.setTitle(R.string.settings_range)
+						.setNeutralButton("Ok",
+								new DialogInterface.OnClickListener()
+								{
+									public void onClick(DialogInterface dialog,
+											int whichButton)
+									{
+										try
+										{
+											float range = Float
+													.parseFloat(input.getText()
+															.toString());
+											
+											DatabaseHelper.radius = range;
+											Editor editor = getSharedPreferences(
+													"init", 0).edit();
+											editor.putFloat("range", range);
+											editor.commit();
+										}
+										catch (NumberFormatException nfe)
+										{
+
+										}
+
+									}
+								}).show();
+				break;
 		}
 		return true;
 	}
