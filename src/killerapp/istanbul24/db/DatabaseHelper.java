@@ -14,6 +14,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import org.mapsforge.core.model.GeoPoint;
+
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -121,6 +123,44 @@ public class DatabaseHelper extends SQLiteOpenHelper
 	public DatabaseHelper(Context context)
 	{
 		super(context, DATABASE_NAME, null, DATABASE_VERSION);
+	}
+	
+	/**
+	 * Returns the approximate distance in degrees. Starting point must be provided.
+	 * @param lat 
+	 * @param lon
+	 * @param dist
+	 */
+	private double dist2deg(double lat, double lon, double dist)
+	{
+		double distInDegrees = 0;
+
+		// number of kms in 1 degrees of longitude
+		double avgDist = 111.32 * (Math.cos(deg2rad(lat)) + Math
+				.cos(deg2rad(lat + 1))) / 2;
+
+		double avgDistInDeg = dist / avgDist;
+		
+		// 1 degrees of latitude is approximately (average) 111.133 km
+		distInDegrees = Math.sqrt(avgDistInDeg * avgDistInDeg + 1);
+		
+		return distInDegrees;
+	}
+	
+	/**
+	 * Returns the approximate distance in degrees. Starting point must be provided.
+	 * @param p
+	 * @param dist
+	 */
+	private double dist2deg(GeoPoint p, double dist)
+	{
+		return dist2deg(p.latitude, p.longitude, dist);
+	}
+	
+	private double deg2rad(double deg)
+	{
+		// multiply with (PI / 180.0)
+		return (deg * 0.017453292519943278);
 	}
 
 	// CREATE methods
