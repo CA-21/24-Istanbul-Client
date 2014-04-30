@@ -142,6 +142,7 @@ public class DatabaseHelper extends SQLiteOpenHelper
 		SQLiteDatabase db = this.getWritableDatabase();
 
 		ContentValues values = new ContentValues();
+		values.put(KEY_ID, arg.getId());
 		values.put(KEY_QUESTION_ID, arg.getQuestionId());
 		values.put(KEY_NAME, arg.getName());
 		values.put(KEY_TAG_ID, arg.getTagId());
@@ -154,6 +155,7 @@ public class DatabaseHelper extends SQLiteOpenHelper
 		SQLiteDatabase db = this.getWritableDatabase();
 
 		ContentValues values = new ContentValues();
+		values.put(KEY_ID, arg.getId());
 		values.put(KEY_CATEGORY_ID, arg.getCategoryId());
 		values.put(KEY_QUESTION, arg.getQuestion());
 		values.put(KEY_LAST_UPDATE_DATE, arg.getLastUpdateDate());

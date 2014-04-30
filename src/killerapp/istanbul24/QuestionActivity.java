@@ -64,6 +64,7 @@ public class QuestionActivity extends Activity implements OnClickListener
 		Button button2 = (Button) findViewById(R.id.button2);
 		Button skip = (Button) findViewById(R.id.skip);
 
+
 		button1.setText(options.get(0).getName());
 		button2.setText(options.get(1).getName());
 		skip.setText("Skip this question");

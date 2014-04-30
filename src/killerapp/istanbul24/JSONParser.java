@@ -167,7 +167,7 @@ public class JSONParser
 
 				if (exQuestion == null)
 				{
-					dbHelper.createQuestion(new Question(question
+					dbHelper.createQuestion(new Question(question.getInt("id"), question
 							.getInt("category"),
 							question.getString("question"), question
 									.getString("update_date")));
@@ -224,7 +224,7 @@ public class JSONParser
 					}
 
 					if (exOption == null)
-						dbHelper.createOption(new Option(question.getInt("id"),
+						dbHelper.createOption(new Option(option.getInt("id"), question.getInt("id"),
 								tagId, option.getString("text")));
 					else
 						Log.d("24Istanbul-DB", "Option already exists.");
