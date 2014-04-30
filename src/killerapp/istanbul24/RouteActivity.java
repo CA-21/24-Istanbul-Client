@@ -520,9 +520,16 @@ public class RouteActivity extends MapActivity
 	{
 		TextView textView = (TextView) findViewById(R.id.infoText);
 		
+		String googleMapsUrl = "http://maps.google.com/maps?z="
+				+ mapView.getMapViewPosition().getZoomLevel() + "&t=m&q=loc:"
+				+ end.latitude + "+" + end.longitude;
+
 		Intent intent = new Intent(Intent.ACTION_SEND);
 		intent.setType("text/plain");
-		intent.putExtra(Intent.EXTRA_TEXT, "I found this awesome place with 24Istanbul:\n"+textView.getText());
+		intent.putExtra(Intent.EXTRA_TEXT, "I found this awesome place with 24Istanbul: " + venue.getName() +"\n" + googleMapsUrl);
+		
+		
+		//intent.putExtra(Intent.EXTRA_TEXT, googleMapsUrl);
 
 		// startActivity(Intent.createChooser(fbIntent(), "Share with"));
 		startActivity(intent);
