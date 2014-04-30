@@ -36,70 +36,6 @@ public class MainActivity extends Activity
 		setContentView(R.layout.activity_main);
 	}
 
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu)
-	{
-		getMenuInflater().inflate(R.menu.main, menu);
-		return true;
-	}
-
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item)
-	{
-		switch (item.getItemId())
-		{
-			case R.id.settings_range_button:
-				final EditText input = new EditText(this);
-				input.setInputType(InputType.TYPE_NUMBER_FLAG_DECIMAL);
-
-				SharedPreferences init = getSharedPreferences("init", 0);
-				input.setText(init.getFloat("range", 1) + "");
-
-				new AlertDialog.Builder(this)
-						.setView(input)
-						.setTitle(R.string.settings_range)
-						.setNeutralButton("Ok",
-								new DialogInterface.OnClickListener()
-								{
-									public void onClick(DialogInterface dialog,
-											int whichButton)
-									{
-										try
-										{
-											float range = Float
-													.parseFloat(input.getText()
-															.toString());
-											
-											// limit range to 0.3
-											if (range > 0.3)
-											{
-												Log.d("24Istanbul","Range cannot be greater than 0.3");
-												range = 0.3f;
-											}
-											if (range < 0.001)
-											{
-												Log.d("24Istanbul","Range cannot be less than 0.001");
-												range = 0.001f;
-											}
-											
-											DatabaseHelper.radius = range;
-											Editor editor = getSharedPreferences(
-													"init", 0).edit();
-											editor.putFloat("range", range);
-											editor.commit();
-										}
-										catch (NumberFormatException nfe)
-										{
-
-										}
-
-									}
-								}).show();
-				break;
-		}
-		return true;
-	}
-
 	public void startQuestionActivity(View view)
 	{
 		int catID = 0;
@@ -127,7 +63,7 @@ public class MainActivity extends Activity
 															// will add into
 															// this.
 
-		Intent intent = new Intent(getBaseContext(), QuestionActivity.class); // Intent is
+		Intent intent = new Intent(getBaseContext(), RangeActivity.class); // Intent is
 																	// created.
 //		intent.putExtra("selected", selected);
 		intent.putExtra("question", 0);

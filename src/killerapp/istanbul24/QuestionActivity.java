@@ -23,7 +23,6 @@ import android.widget.TextView;
  */
 public class QuestionActivity extends Activity implements OnClickListener
 {
-	private ArrayList<Integer> selected;
 	private Question question;
 	private int questionCount;
 	private ArrayList<Venue> venues;

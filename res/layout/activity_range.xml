@@ -1,0 +1,47 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/istanbul8"
+    android:orientation="vertical"
+    tools:context=".RangeActivity" >
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="0dp"
+        android:layout_margin="10dp"
+        android:layout_weight="0.7"
+        android:background="@drawable/white_button"
+        android:gravity="center"
+        android:orientation="vertical" >
+
+        <TextView
+            android:id="@+id/rangeView"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="Range (~3 km)"
+            android:textSize="20dp"
+            android:textStyle="bold" />
+
+        <SeekBar
+            android:id="@+id/rangeSeek"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp" />
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/rangeOK"
+        android:layout_width="fill_parent"
+        android:layout_height="0dp"
+        android:layout_margin="5dp"
+        android:layout_marginTop="2dp"
+        android:layout_weight="0.2"
+        android:background="@drawable/black_button"
+        android:onClick="rangeOK"
+        android:text="Continue"
+        android:textColor="#ffffff"
+        android:textStyle="bold" />
+
+</LinearLayout>
