@@ -372,12 +372,13 @@ public class RouteActivity extends MapActivity
 
 					pathOverlay.getOverlayItems().add(createPolyline(resp));
 					mapView.redraw();
-					
+
 					TextView textView = (TextView) findViewById(R.id.infoText);
-					textView.setText(venue.getName()+"\n(Distance: "+String.format("%.02f", distance)+"m)");
-					
-					if(!venue.getAddress().equals("null"))
-						textView.append("\n"+venue.getAddress());
+					textView.setText(venue.getName() + "\n(Distance: "
+							+ String.format("%.02f", distance) + "m)");
+
+					if (!venue.getAddress().equals("null"))
+						textView.append("\nAddress: " + venue.getAddress());
 				}
 				else
 				{
