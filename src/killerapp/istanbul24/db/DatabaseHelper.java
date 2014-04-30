@@ -162,7 +162,7 @@ public class DatabaseHelper extends SQLiteOpenHelper
 
 		return db.insert(TABLE_QUESTION, null, values);
 	}
-	
+
 	public long createVenueMeta(VenueMeta arg)
 	{
 		SQLiteDatabase db = this.getWritableDatabase();
@@ -215,9 +215,13 @@ public class DatabaseHelper extends SQLiteOpenHelper
 		if (c != null)
 			c.moveToFirst();
 
-		return new Category(c.getInt(c.getColumnIndex(KEY_ID)), c.getString(c
+		Category cat = new Category(c.getInt(c.getColumnIndex(KEY_ID)), c.getString(c
 				.getColumnIndex(KEY_NAME)), c.getString(c
 				.getColumnIndex(KEY_LAST_UPDATE_DATE)));
+
+		c.close();
+		db.close();
+		return cat;
 	}
 
 	public Option getOption(int id)
@@ -232,10 +236,14 @@ public class DatabaseHelper extends SQLiteOpenHelper
 		if (c != null)
 			c.moveToFirst();
 
-		return new Option(c.getInt(c.getColumnIndex(KEY_ID)), c.getInt(c
+		Option option = new Option(c.getInt(c.getColumnIndex(KEY_ID)), c.getInt(c
 				.getColumnIndex(KEY_QUESTION_ID)), c.getInt(c
 				.getColumnIndex(KEY_TAG_ID)), c.getString(c
 				.getColumnIndex(KEY_NAME)));
+
+		c.close();
+		db.close();
+		return option;
 	}
 
 	public ArrayList<Option> getOptions(int questionId)
@@ -258,6 +266,7 @@ public class DatabaseHelper extends SQLiteOpenHelper
 		}
 
 		c.close();
+		db.close();
 
 		return list;
 	}
@@ -279,10 +288,11 @@ public class DatabaseHelper extends SQLiteOpenHelper
 		}
 
 		c.close();
+		db.close();
 
 		return list;
 	}
-	
+
 	public ArrayList<Integer> getQuestionIds(int categoryId)
 	{
 		SQLiteDatabase db = this.getReadableDatabase();
@@ -300,6 +310,7 @@ public class DatabaseHelper extends SQLiteOpenHelper
 		}
 
 		c.close();
+		db.close();
 
 		return list;
 	}
@@ -316,10 +327,14 @@ public class DatabaseHelper extends SQLiteOpenHelper
 		if (c != null)
 			c.moveToFirst();
 
-		return new Question(c.getInt(c.getColumnIndex(KEY_ID)), c.getInt(c
+		Question question = new Question(c.getInt(c.getColumnIndex(KEY_ID)), c.getInt(c
 				.getColumnIndex(KEY_CATEGORY_ID)), c.getString(c
 				.getColumnIndex(KEY_QUESTION)), c.getString(c
 				.getColumnIndex(KEY_LAST_UPDATE_DATE)));
+
+		c.close();
+		db.close();
+		return question;
 	}
 
 	public ArrayList<Integer> getTags(int categoryId)
@@ -339,6 +354,7 @@ public class DatabaseHelper extends SQLiteOpenHelper
 		}
 
 		c.close();
+		db.close();
 
 		return list;
 	}
@@ -355,8 +371,12 @@ public class DatabaseHelper extends SQLiteOpenHelper
 		if (c != null)
 			c.moveToFirst();
 
-		return new Tag(c.getInt(c.getColumnIndex(KEY_ID)), c.getInt(c
+		Tag tag = new Tag(c.getInt(c.getColumnIndex(KEY_ID)), c.getInt(c
 				.getColumnIndex(KEY_CATEGORY_ID)));
+
+		c.close();
+		db.close();
+		return tag;
 	}
 
 	public Venue getVenue(String id)
@@ -371,18 +391,23 @@ public class DatabaseHelper extends SQLiteOpenHelper
 		if (c != null)
 			c.moveToFirst();
 
-		return new Venue(c.getString(c.getColumnIndex(KEY_ID)), c.getString(c
+		Venue venue = new Venue(c.getString(c.getColumnIndex(KEY_ID)), c.getString(c
 				.getColumnIndex(KEY_ADDRESS)), c.getString(c
 				.getColumnIndex(KEY_NAME)), c.getDouble(c
 				.getColumnIndex(KEY_LONGITUDE)), c.getDouble(c
 				.getColumnIndex(KEY_LATITUDE)), c.getString(c
 				.getColumnIndex(KEY_LAST_UPDATE_DATE)));
+
+		c.close();
+		db.close();
+
+		return venue;
 	}
 
 	public ArrayList<Venue> getVenues(int tagId, double longitude, double latitude)
 	{
 		ArrayList<Venue> list = new ArrayList<Venue>();
-		
+
 		SQLiteDatabase db = this.getReadableDatabase();
 
 		String selectQuery = "SELECT DISTINCT * FROM " + TABLE_VENUE + " JOIN " + TABLE_VENUE_META +
@@ -391,9 +416,7 @@ public class DatabaseHelper extends SQLiteOpenHelper
 				TABLE_VENUE + "." + KEY_LONGITUDE + " < " + (longitude + radius) + " AND " +
 				TABLE_VENUE + "." + KEY_LONGITUDE + " > " + (longitude - radius) + " AND " +
 				TABLE_VENUE + "." + KEY_LATITUDE + " < " + (latitude + radius) + " AND " +
-				TABLE_VENUE + "." + KEY_LATITUDE + " > " + (latitude - radius)
-				;
-		
+				TABLE_VENUE + "." + KEY_LATITUDE + " > " + (latitude - radius);
 
 		Cursor c = db.rawQuery(selectQuery, null);
 
@@ -411,14 +434,15 @@ public class DatabaseHelper extends SQLiteOpenHelper
 		}
 
 		c.close();
+		db.close();
 
 		return list;
 	}
-	
+
 	public ArrayList<Venue> getVenues(double longitude, double latitude)
 	{
 		ArrayList<Venue> list = new ArrayList<Venue>();
-		
+
 		SQLiteDatabase db = this.getReadableDatabase();
 
 		String selectQuery = "SELECT DISTINCT * FROM " + TABLE_VENUE + " JOIN " + TABLE_VENUE_META +
@@ -426,9 +450,7 @@ public class DatabaseHelper extends SQLiteOpenHelper
 				" AND " + TABLE_VENUE + "." + KEY_LONGITUDE + " < " + (longitude + radius) + " AND " +
 				TABLE_VENUE + "." + KEY_LONGITUDE + " > " + (longitude - radius) + " AND " +
 				TABLE_VENUE + "." + KEY_LATITUDE + " < " + (latitude + radius) + " AND " +
-				TABLE_VENUE + "." + KEY_LATITUDE + " > " + (latitude - radius)
-				;
-		
+				TABLE_VENUE + "." + KEY_LATITUDE + " > " + (latitude - radius);
 
 		Cursor c = db.rawQuery(selectQuery, null);
 
@@ -444,34 +466,34 @@ public class DatabaseHelper extends SQLiteOpenHelper
 						.getColumnIndex(KEY_LONGITUDE)), c.getDouble(c
 						.getColumnIndex(KEY_LATITUDE)), c.getString(c
 						.getColumnIndex(KEY_LAST_UPDATE_DATE)));
-				
-	
-					if (list.size() > 0)
+
+				if (list.size() > 0)
+				{
+					isFound = false;
+					for (Venue venue : list)
 					{
-						isFound = false;
-						for (Venue venue : list)
+						if (venue.equals(temp))
 						{
-							if (venue.equals(temp))
-							{
-								isFound = true;
-								break;
-							}
+							isFound = true;
+							break;
 						}
 					}
-					else
-						list.add(temp);
-					
-					if (!isFound)
-						list.add(temp);
-				
+				}
+				else
+					list.add(temp);
+
+				if (!isFound)
+					list.add(temp);
+
 			}
 		}
 
 		c.close();
+		db.close();
 
 		return list;
 	}
-	
+
 	public VenueMeta getVenueMeta(int tagId, String venueId)
 	{
 		SQLiteDatabase db = this.getReadableDatabase();
@@ -485,9 +507,13 @@ public class DatabaseHelper extends SQLiteOpenHelper
 		if (c != null)
 			c.moveToFirst();
 
-		return new VenueMeta(c.getInt(c.getColumnIndex(KEY_ID)), c.getInt(c
+		VenueMeta venueMeta = new VenueMeta(c.getInt(c.getColumnIndex(KEY_ID)), c.getInt(c
 				.getColumnIndex(KEY_TAG_ID)), c.getString(c
 				.getColumnIndex(KEY_VENUE_ID)));
+
+		c.close();
+		db.close();
+		return venueMeta;
 	}
 
 	// READ methods - end
@@ -623,8 +649,8 @@ public class DatabaseHelper extends SQLiteOpenHelper
 			fis.close();
 			fos.close();
 
-			Log.d("","db exported.");
-			
+			Log.d("", "db exported.");
+
 			return true;
 		}
 		catch (IOException e)
@@ -659,4 +685,5 @@ public class DatabaseHelper extends SQLiteOpenHelper
 		db.execSQL("DROP TABLE IF EXISTS venue_metas");
 		onCreate(db);
 	}
+
 }
