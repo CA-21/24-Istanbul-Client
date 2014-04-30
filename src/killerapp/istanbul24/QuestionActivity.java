@@ -154,7 +154,7 @@ public class QuestionActivity extends Activity implements OnClickListener
 			startActivity(intent); // Activity is created.
 		}
 
-
+		finish();
 	}
 	
 	@Override

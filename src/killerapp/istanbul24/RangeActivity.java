@@ -71,6 +71,7 @@ public class RangeActivity extends Activity
 		intent.putExtra("question", questionCount);
 		intent.putParcelableArrayListExtra("venues", venues);
 		startActivity(intent); // Activity is created.
+		finish();
 	}
 	
 
