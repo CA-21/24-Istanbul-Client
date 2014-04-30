@@ -11,6 +11,7 @@ import org.mapsforge.core.model.GeoPoint;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -37,22 +38,30 @@ public class ResultActivity extends Activity
 		Intent intent = getIntent();
 		venues = intent.getParcelableArrayListExtra("venues");
 		venues = sortVenues(venues);
-		
-		if(venues.size() == 0)
+
+		if (venues.size() == 0)
 		{
 			setContentView(R.layout.activity_empty_result);
-			
+
 			DatabaseHelper db = new DatabaseHelper(this);
+			if (CurrentLocation.longitude == 0)
+			{
+				// Fake location for VM or broken GPS
+				CurrentLocation.longitude = 28.986435;
+				CurrentLocation.latitude = 41.036762;
+			}
 			venues = sortVenues(db.getVenues(CurrentLocation.longitude, CurrentLocation.latitude));
 		}
-		
+
+		Log.d("venue", venues.size() + "");
+
 		ArrayList<String> nameList = new ArrayList<String>();
 
 		for (Venue venue : venues)
 		{
 			GeoPoint geo1 = new GeoPoint(venue.getLatitude(), venue.getLongitude());
 			GeoPoint geo2 = new GeoPoint(CurrentLocation.latitude, CurrentLocation.longitude);
-			nameList.add(venue.getName() + " (~"+ (int)(calculateDistance(geo1, geo2)*1000)+"m)");
+			nameList.add(venue.getName() + " (~" + (int) (calculateDistance(geo1, geo2) * 1000) + "m)");
 		}
 
 		ListView listView = (ListView) this.findViewById(R.id.listView_items);
@@ -91,15 +100,15 @@ public class ResultActivity extends Activity
 		for (int i = 0; i < venueCount; i++)
 		{
 			smallest = oldVenues.get(0);
-			
+
 			for (Venue venue : oldVenues)
 			{
-				if(smallest.getFakeDistance() > venue.getFakeDistance())
+				if (smallest.getFakeDistance() > venue.getFakeDistance())
 				{
 					smallest = venue;
 				}
 			}
-			
+
 			newVenues.add(smallest);
 			oldVenues.remove(smallest);
 		}
