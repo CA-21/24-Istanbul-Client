@@ -61,7 +61,7 @@ public class RangeActivity extends Activity
 	public void rangeOK(View view)
 	{
 		SeekBar seekbar = (SeekBar) findViewById(R.id.rangeSeek);
-		DatabaseHelper.radius = (float) dist2deg(CurrentLocation.latitude, CurrentLocation.longitude,(seekbar.getProgress()+1)*0.5);
+		DatabaseHelper.radius = (float) dist2deg(CurrentLocation.latitude, CurrentLocation.longitude,(seekbar.getProgress()+1)*0.5)/1.41421356237f;
 		
 		Log.d("radius", ""+DatabaseHelper.radius);
 		

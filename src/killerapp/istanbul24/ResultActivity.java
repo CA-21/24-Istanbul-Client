@@ -3,6 +3,7 @@ package killerapp.istanbul24;
 import java.io.Serializable;
 import java.util.ArrayList;
 
+import killerapp.istanbul24.db.DatabaseHelper;
 import killerapp.istanbul24.db.Venue;
 
 import org.mapsforge.core.model.GeoPoint;
@@ -36,6 +37,15 @@ public class ResultActivity extends Activity
 		Intent intent = getIntent();
 		venues = intent.getParcelableArrayListExtra("venues");
 		venues = sortVenues(venues);
+		
+		if(venues.size() == 0)
+		{
+			setContentView(R.layout.activity_empty_result);
+			
+			DatabaseHelper db = new DatabaseHelper(this);
+			venues = sortVenues(db.getVenues(CurrentLocation.longitude, CurrentLocation.latitude));
+		}
+		
 		ArrayList<String> nameList = new ArrayList<String>();
 
 		for (Venue venue : venues)

@@ -1,0 +1,33 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/istanbul5"
+    android:orientation="vertical"
+    tools:context=".ResultActivity" >
+
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_margin="10dp"
+        android:padding="10dp"
+        android:background="@drawable/white_button"
+        android:text="24Istanbull cannot find any place by your answers.\nYou can look at other places near by you:"
+        android:textColor="#ff0000"
+        android:textSize="20dp"
+        android:textStyle="bold" />
+
+    <ListView
+        android:id="@+id/listView_items"
+        android:layout_width="fill_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="2dp"
+        android:layout_margin="10dp"
+        android:background="#80ffffff"
+        android:cacheColorHint="#00000000"
+        android:textColor="#000000"
+        android:textStyle="bold" >
+    </ListView>
+
+</LinearLayout>

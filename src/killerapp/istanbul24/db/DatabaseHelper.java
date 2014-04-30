@@ -413,6 +413,63 @@ public class DatabaseHelper extends SQLiteOpenHelper
 		return list;
 	}
 	
+	public ArrayList<Venue> getVenues(double longitude, double latitude)
+	{
+		ArrayList<Venue> list = new ArrayList<Venue>();
+		
+		SQLiteDatabase db = this.getReadableDatabase();
+
+		String selectQuery = "SELECT DISTINCT * FROM " + TABLE_VENUE + " JOIN " + TABLE_VENUE_META +
+				" WHERE " + TABLE_VENUE + "." + KEY_ID + " = " + TABLE_VENUE_META + "." + KEY_VENUE_ID +
+				" AND " + TABLE_VENUE + "." + KEY_LONGITUDE + " < " + (longitude + radius) + " AND " +
+				TABLE_VENUE + "." + KEY_LONGITUDE + " > " + (longitude - radius) + " AND " +
+				TABLE_VENUE + "." + KEY_LATITUDE + " < " + (latitude + radius) + " AND " +
+				TABLE_VENUE + "." + KEY_LATITUDE + " > " + (latitude - radius)
+				;
+		
+
+		Cursor c = db.rawQuery(selectQuery, null);
+
+		if (c != null)
+		{
+			boolean isFound = true;
+			Venue temp;
+			while (c.moveToNext())
+			{
+				temp = new Venue(c.getString(c.getColumnIndex(KEY_VENUE_ID)), c.getString(c
+						.getColumnIndex(KEY_ADDRESS)), c.getString(c
+						.getColumnIndex(KEY_NAME)), c.getDouble(c
+						.getColumnIndex(KEY_LONGITUDE)), c.getDouble(c
+						.getColumnIndex(KEY_LATITUDE)), c.getString(c
+						.getColumnIndex(KEY_LAST_UPDATE_DATE)));
+				
+	
+					if (list.size() > 0)
+					{
+						isFound = false;
+						for (Venue venue : list)
+						{
+							if (venue.equals(temp))
+							{
+								isFound = true;
+								break;
+							}
+						}
+					}
+					else
+						list.add(temp);
+					
+					if (!isFound)
+						list.add(temp);
+				
+			}
+		}
+
+		c.close();
+
+		return list;
+	}
+	
 	public VenueMeta getVenueMeta(int tagId, String venueId)
 	{
 		SQLiteDatabase db = this.getReadableDatabase();
