@@ -286,7 +286,6 @@ public class SplashScreen extends Activity
 			SharedPreferences init = getSharedPreferences("init", 0);
 			downloadID = init.getLong("downloadID", 0);
 			lastUpdate = init.getLong("lastUpdate", 0);
-			DatabaseHelper.radius = init.getFloat("range", 0.025f);
 
 			if (!new File(Environment.getExternalStorageDirectory() + "/24Istanbul/istanbul-gh").exists())
 			// Map was not extracted or downloaded.
