@@ -1,9 +1,6 @@
 package killerapp.istanbul24.adapters;
 
 import java.util.ArrayList;
-import java.util.List;
-
-import org.w3c.dom.Text;
 
 import killerapp.istanbul24.R;
 import killerapp.istanbul24.db.Venue;
@@ -39,12 +36,10 @@ public class ResultListAdapter extends ArrayAdapter<Venue> {
 		TextView nameView = (TextView) convertView.findViewById(R.id.name);
 		nameView.setText(objects.get(position).getName());
 		
+		Venue venue = objects.get(position);
 		TextView distanceView = (TextView) convertView.findViewById(R.id.distance);
-		distanceView.setText(objects.get(position).getDistance()+"m");
+		distanceView.setText(venue.getCalculatedDistance()+"m");
 		
         return convertView;
 	}
-	
-	
-
 }

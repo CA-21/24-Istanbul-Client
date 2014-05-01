@@ -2,19 +2,20 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/istanbul5"
+    android:background="@drawable/istanbul1"
+    android:padding="10dp"
     tools:context=".ResultActivity" >
 
     <ListView
-        android:padding="10dp"
         android:id="@+id/listView_items"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:layout_marginTop="2dp"
+        android:background="#80ffffff"
         android:cacheColorHint="#00000000"
+        android:textColor="#000000"
         android:divider="@android:color/transparent"
         android:dividerHeight="10dp"
-        android:textColor="#000000"
         android:textStyle="bold" >
     </ListView>
 

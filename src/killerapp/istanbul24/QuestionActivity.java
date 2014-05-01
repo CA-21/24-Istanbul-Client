@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 /**
  * Displays questions related to the chosen categories, and filters nearby
@@ -29,6 +30,8 @@ public class QuestionActivity extends Activity implements OnClickListener
 	private ArrayList<Integer> questions;
 	ArrayList<Option> options;
 	private DatabaseHelper db;
+    private TextView greetingView;
+
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
@@ -52,7 +55,9 @@ public class QuestionActivity extends Activity implements OnClickListener
 		int questionIndex = new Random().nextInt(questions.size());
 		int questionID = questions.get(questionIndex);
 
-        
+        greetingView = (TextView)findViewById(R.id.greetingView);
+        greetingView.setText(TimeHelper.getGreeting());
+
 		question = db.getQuestion(questionID);//new Question(questionID, db);
 		questionView.setText(question.getQuestion());
 

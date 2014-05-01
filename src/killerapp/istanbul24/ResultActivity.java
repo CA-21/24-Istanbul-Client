@@ -16,6 +16,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 /**
@@ -54,12 +55,13 @@ public class ResultActivity extends Activity
 		}
 
 
-
 		for (Venue venue : venues)
 		{
 			GeoPoint geo1 = new GeoPoint(venue.getLatitude(), venue.getLongitude());
 			GeoPoint geo2 = new GeoPoint(CurrentLocation.latitude, CurrentLocation.longitude);
-			venue.setDistance((double) (calculateDistance(geo1, geo2) * 1000));
+			int calculatedDistance = (int) (calculateDistance(geo1, geo2) * 1000);
+			venue.setCalculatedDistance(calculatedDistance);
+			Log.i("dist","dist:"+calculatedDistance);
 		}
 
 		ListView listView = (ListView) this.findViewById(R.id.listView_items);

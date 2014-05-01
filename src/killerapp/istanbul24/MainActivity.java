@@ -11,6 +11,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 /**
  * The main activity. Categories are selected.
@@ -19,33 +20,17 @@ import android.widget.ImageView;
 public class MainActivity extends Activity
 {
 
+    private TextView greetingView;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-		
-		ImageView imageView = (ImageView) findViewById(R.id.mainImage);
-		
-		
-		int hour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
-		
-		if (hour >= 6 && hour < 12)
-		{
-			imageView.setBackgroundResource(R.drawable.flag_start);
-		}
-		else if (hour >= 12 && hour < 18)
-		{
-			imageView.setBackgroundResource(R.drawable.flag_start);
-		}
-		else if (hour >= 18 && hour < 23)
-		{
-			imageView.setBackgroundResource(R.drawable.flag_end);
-		}
-		else
-		{
-			imageView.setBackgroundResource(R.drawable.flag_end);
-		}
+
+        greetingView = (TextView)findViewById(R.id.greetingTextView);
+        greetingView.setText(TimeHelper.getGreeting());
+
 	}
 
 	public void startQuestionActivity(View view)
@@ -81,7 +66,6 @@ public class MainActivity extends Activity
 		intent.putExtra("question", 0);
 		intent.putExtra("questions", questions);
 		intent.putParcelableArrayListExtra("venues", venues);
-		intent.putIntegerArrayListExtra("questions", questions);
 		startActivity(intent); // Activity is created.
 	}
 

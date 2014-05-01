@@ -304,7 +304,7 @@ public class RouteActivity extends MapActivity
 						.setAlgorithm("dijkstrabi")
 						.putHint("instructions", false)
 						.putHint("douglas.minprecision", 1)
-						.setVehicle("car");
+						.setVehicle("foot");
 
 				GraphHopper _gh = ((GraphHopper) hopper);
 
@@ -377,13 +377,8 @@ public class RouteActivity extends MapActivity
 					textView.setText(venue.getName() + "\n(Distance: "
 							+ String.format("%.02f", distance) + "m)");
 
-					if (!venue.getAddress().equals("null")){
+					if (!venue.getAddress().equals("null"))
 						textView.append("\nAddress: " + venue.getAddress());
-						log("addr:" + venue.getAddress());
-					}
-					else {
-						textView.append("\nAddress: " + "Not Available");
-					}
 				}
 				else
 				{
