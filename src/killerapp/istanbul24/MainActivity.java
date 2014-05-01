@@ -1,26 +1,16 @@
 package killerapp.istanbul24;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 
 import killerapp.istanbul24.db.DatabaseHelper;
 import killerapp.istanbul24.db.Venue;
-
-import org.mapsforge.core.model.GeoPoint;
-
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.text.InputType;
-import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
-import android.widget.EditText;
-import android.widget.Toast;
+import android.widget.ImageView;
 
 /**
  * The main activity. Categories are selected.
@@ -34,6 +24,28 @@ public class MainActivity extends Activity
 	{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+		
+		ImageView imageView = (ImageView) findViewById(R.id.mainImage);
+		
+		
+		int hour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
+		
+		if (hour >= 6 && hour < 12)
+		{
+			imageView.setBackgroundResource(R.drawable.flag_start);
+		}
+		else if (hour >= 12 && hour < 18)
+		{
+			imageView.setBackgroundResource(R.drawable.flag_start);
+		}
+		else if (hour >= 18 && hour < 23)
+		{
+			imageView.setBackgroundResource(R.drawable.flag_end);
+		}
+		else
+		{
+			imageView.setBackgroundResource(R.drawable.flag_end);
+		}
 	}
 
 	public void startQuestionActivity(View view)

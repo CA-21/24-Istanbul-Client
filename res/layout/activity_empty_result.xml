@@ -13,7 +13,7 @@
         android:layout_margin="10dp"
         android:padding="10dp"
         android:background="@drawable/white_button"
-        android:text="24Istanbull cannot find any place by your answers.\nYou can look at other places near by you:"
+        android:text="24Istanbul cannot find any place by your answers.\nYou can look at other places near by you:"
         android:textColor="#ff0000"
         android:textSize="20dp"
         android:textStyle="bold" />
