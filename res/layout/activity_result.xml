@@ -6,16 +6,27 @@
     android:padding="10dp"
     tools:context=".ResultActivity" >
 
+    <TextView
+        android:id="@+id/warning_text"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:visibility="gone"
+        android:background="@drawable/white_button"
+        android:gravity="center"
+        android:text="24Istanbul could not find any place meeting your requirements. Perhaps you can try these:"
+        android:textSize="18dp"
+        android:textStyle="italic" />
+
     <ListView
         android:id="@+id/listView_items"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:layout_marginTop="2dp"
-        android:background="#80ffffff"
+        android:layout_below="@+id/warning_text"
         android:cacheColorHint="#00000000"
-        android:textColor="#000000"
         android:divider="@android:color/transparent"
         android:dividerHeight="10dp"
+        android:textColor="#000000"
         android:textStyle="bold" >
     </ListView>
 

@@ -1,12 +1,10 @@
 package killerapp.istanbul24;
 
-import java.util.ArrayList;
-
 import killerapp.istanbul24.db.DatabaseHelper;
-import killerapp.istanbul24.db.Venue;
 
 import org.mapsforge.core.model.GeoPoint;
 
+import data.DataSource;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -18,22 +16,16 @@ import android.widget.TextView;
 
 public class RangeActivity extends Activity
 {
-	private int questionCount;
-	private ArrayList<Venue> venues;
-	private ArrayList<Integer> questions;
-	
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_range);
 
-		Intent intent = getIntent();
+		DataSource.getInstance().nothingFound=false;
 
 		//selected = intent.getIntegerArrayListExtra("selected");
-		questionCount = intent.getIntExtra("question", 0);
-		venues = intent.getParcelableArrayListExtra("venues");
-		questions = intent.getIntegerArrayListExtra("questions");
+	
 		
 		final TextView rangeView = (TextView) findViewById(R.id.rangeView);
 		
@@ -67,9 +59,6 @@ public class RangeActivity extends Activity
 		
 		Intent intent = new Intent(getBaseContext(), QuestionActivity.class);
 		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-		intent.putIntegerArrayListExtra("questions", questions);
-		intent.putExtra("question", questionCount);
-		intent.putParcelableArrayListExtra("venues", venues);
 		startActivity(intent); // Activity is created.
 		finish();
 	}

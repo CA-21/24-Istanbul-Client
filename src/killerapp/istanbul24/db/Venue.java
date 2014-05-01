@@ -173,8 +173,8 @@ public final class Venue implements Parcelable, Serializable
 		return false;
 	}
 
-	public double getCalculatedDistance() {
-		return calculatedDistance;
+	public int getCalculatedDistance() {
+		return (int)calculatedDistance;
 	}
 
 	public void setCalculatedDistance(double calculatedDistance) {

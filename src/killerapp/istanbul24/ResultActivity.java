@@ -9,15 +9,18 @@ import killerapp.istanbul24.db.Venue;
 
 import org.mapsforge.core.model.GeoPoint;
 
+import data.DataSource;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.OrientationListener;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 
 /**
  * Displays the places of interest that are filtered according to the user's
@@ -26,24 +29,21 @@ import android.widget.ListView;
  */
 public class ResultActivity extends Activity
 {
-	private ArrayList<Venue> venues;
-	private ResultActivity instance;
+	DataSource dataSource;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_result);
+		
+		dataSource = DataSource.getInstance();
+		dataSource.setVenues(sortVenues(dataSource.getVenues()));
 
-		instance = this;
-		Intent intent = getIntent();
-		venues = intent.getParcelableArrayListExtra("venues");
-		venues = sortVenues(venues);
-
-		if (venues.size() == 0)
+		if (dataSource.nothingFound)
 		{
-			setContentView(R.layout.activity_empty_result);
-
+			TextView warningText = (TextView)findViewById(R.id.warning_text);
+			warningText.setVisibility(View.VISIBLE);
 			DatabaseHelper db = new DatabaseHelper(this);
 			if (CurrentLocation.longitude == 0)
 			{
@@ -51,22 +51,21 @@ public class ResultActivity extends Activity
 				CurrentLocation.longitude = 28.986435;
 				CurrentLocation.latitude = 41.036762;
 			}
-			venues = sortVenues(db.getVenues(CurrentLocation.longitude, CurrentLocation.latitude));
+			dataSource.setVenues(sortVenues(db.getVenues(CurrentLocation.longitude, CurrentLocation.latitude)));
 		}
 
 
-		for (Venue venue : venues)
+		for (Venue venue : dataSource.getVenues() )
 		{
 			GeoPoint geo1 = new GeoPoint(venue.getLatitude(), venue.getLongitude());
 			GeoPoint geo2 = new GeoPoint(CurrentLocation.latitude, CurrentLocation.longitude);
 			int calculatedDistance = (int) (calculateDistance(geo1, geo2) * 1000);
 			venue.setCalculatedDistance(calculatedDistance);
-			Log.i("dist","dist:"+calculatedDistance);
 		}
 
 		ListView listView = (ListView) this.findViewById(R.id.listView_items);
 
-		ResultListAdapter itemAdapter = new ResultListAdapter(this, venues);
+		ResultListAdapter itemAdapter = new ResultListAdapter(this, dataSource.getVenues() );
 		listView.setAdapter(itemAdapter);
 
 		listView.setOnItemClickListener(new OnItemClickListener()
@@ -78,13 +77,13 @@ public class ResultActivity extends Activity
 				GeoPoint start = new GeoPoint(CurrentLocation.latitude,
 						CurrentLocation.longitude);
 
-				GeoPoint end = new GeoPoint(venues.get(position).getLatitude(),
-						venues.get(position).getLongitude());
+				GeoPoint end = new GeoPoint(dataSource.getVenues().get(position).getLatitude(),
+						dataSource.getVenues().get(position).getLongitude());
 
-				Intent intent = new Intent(instance, RouteActivity.class);
+				Intent intent = new Intent(ResultActivity.this, RouteActivity.class);
 				intent.putExtra("start", start);
 				intent.putExtra("end", end);
-				intent.putExtra("venue", (Serializable) venues.get(position));
+				intent.putExtra("venue", (Serializable) dataSource.getVenues().get(position));
 				startActivity(intent);
 			}
 		});

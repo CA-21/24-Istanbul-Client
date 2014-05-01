@@ -43,6 +43,7 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.TableLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -324,25 +325,6 @@ public class RouteActivity extends MapActivity
 				if (!resp.hasErrors())
 				{
 					double distance = resp.getDistance();
-					
-
-
-					log("from:" + fromLat + "," + fromLon + " to:" + toLat
-							+ "," + toLon + " found path with distance:"
-							+ distance / 1000f + ", nodes:"
-							+ resp.getPoints().getSize() + ", time:" + time
-							+ " " + resp.getDebugInfo());
-					String toastText = "The route is " + (int) (distance / 100)
-							/ 10f + " km long. Time: " + resp.getMillis()
-							/ 60000f + " min";
-
-					// Append the elapsed time if debugging.
-					toastText += (DEBUG) ? ", debug:" + time : "";
-
-					logUser(toastText);
-					
-					
-
 					// center the start point
 					// mapView.getMapViewPosition().setCenter(start);
 
@@ -373,12 +355,18 @@ public class RouteActivity extends MapActivity
 					pathOverlay.getOverlayItems().add(createPolyline(resp));
 					mapView.redraw();
 
-					TextView textView = (TextView) findViewById(R.id.infoText);
-					textView.setText(venue.getName() + "\n(Distance: "
-							+ String.format("%.02f", distance) + "m)");
-
-					if (!venue.getAddress().equals("null"))
-						textView.append("\nAddress: " + venue.getAddress());
+					TextView nameView = (TextView) findViewById(R.id.name);
+					nameView.setText(venue.getName());
+					
+					TextView adressView = (TextView) findViewById(R.id.address);
+					adressView.setText(venue.getAddress());
+					
+					TextView distanceView = (TextView) findViewById(R.id.distance);
+					distanceView.setText(String.format("%.02f", distance) + " meter");
+					
+					TextView timeView = (TextView) findViewById(R.id.time);
+					timeView.setText((int) Math.round(resp.getMillis()/60000f) + " minutes" );
+					
 				}
 				else
 				{
@@ -432,7 +420,7 @@ public class RouteActivity extends MapActivity
 
 	void loadMap()
 	{
-		logUser("loading map");
+		//logUser("loading map");
 		mapFile = mapFolder + "/" + CURRENT_AREA + ".map";
 		FileOpenResult fileOpenResult = mapView.setMapFile(new File(mapFile));
 		if (!fileOpenResult.isSuccess())
@@ -453,7 +441,7 @@ public class RouteActivity extends MapActivity
 
 	void loadGraphStorage()
 	{
-		logUser("loading graph (" + Constants.VERSION + ") ... ");
+		//logUser("loading graph (" + Constants.VERSION + ") ... ");
 		new GHAsyncTask<Void, Void, Path>()
 		{
 			@Override
@@ -503,24 +491,22 @@ public class RouteActivity extends MapActivity
 
 	public void infoButton(View view)
 	{
-		TextView textView = (TextView) findViewById(R.id.infoText);
+		TableLayout infoBox = (TableLayout) findViewById(R.id.info_box);
 		Button button = (Button) findViewById(R.id.infoButton);
 
-		if (textView.getVisibility() == textView.VISIBLE)
+		if (infoBox.getVisibility() == infoBox.VISIBLE)
 		{
-			textView.setVisibility(textView.INVISIBLE);
+			infoBox.setVisibility(infoBox.INVISIBLE);
 		}
 		else
 		{
-			textView.setVisibility(textView.VISIBLE);
+			infoBox.setVisibility(infoBox.VISIBLE);
 		}
 
 	}
 	
 	public void shareButton(View view)
-	{
-		TextView textView = (TextView) findViewById(R.id.infoText);
-		
+	{		
 		String googleMapsUrl = "http://maps.google.com/maps?z="
 				+ mapView.getMapViewPosition().getZoomLevel() + "&t=m&q=loc:"
 				+ end.latitude + "+" + end.longitude;

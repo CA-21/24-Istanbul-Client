@@ -3,6 +3,7 @@ package killerapp.istanbul24;
 import java.util.ArrayList;
 import java.util.Random;
 
+import data.DataSource;
 import killerapp.istanbul24.db.DatabaseHelper;
 import killerapp.istanbul24.db.Option;
 import killerapp.istanbul24.db.Question;
@@ -26,11 +27,10 @@ public class QuestionActivity extends Activity implements OnClickListener
 {
 	private Question question;
 	private int questionCount;
-	private ArrayList<Venue> venues;
-	private ArrayList<Integer> questions;
 	ArrayList<Option> options;
 	private DatabaseHelper db;
     private TextView greetingView;
+    private DataSource dataSource;
 
 
 	@Override
@@ -45,15 +45,11 @@ public class QuestionActivity extends Activity implements OnClickListener
 		
 		TextView questionView = (TextView) findViewById(R.id.questionView);
 
-		Intent intent = getIntent();
-
-		//selected = intent.getIntegerArrayListExtra("selected");
-		questionCount = intent.getIntExtra("question", 0);
-		venues = intent.getParcelableArrayListExtra("venues");
-		questions = intent.getIntegerArrayListExtra("questions");
+		dataSource = DataSource.getInstance();
+		questionCount = dataSource.getQuestionCount();
 		
-		int questionIndex = new Random().nextInt(questions.size());
-		int questionID = questions.get(questionIndex);
+		int questionIndex = new Random().nextInt(dataSource.getQuestions().size());
+		int questionID = dataSource.getQuestions().get(questionIndex);
 
         greetingView = (TextView)findViewById(R.id.greetingView);
         greetingView.setText(TimeHelper.getGreeting());
@@ -79,7 +75,7 @@ public class QuestionActivity extends Activity implements OnClickListener
 		button2.setOnClickListener(this);
 		skip.setOnClickListener(this);
 		
-		questions.remove(new Integer(questionID));
+		dataSource.getQuestions().remove(Integer.valueOf(questionID));
 
 	}
 
@@ -116,11 +112,11 @@ public class QuestionActivity extends Activity implements OnClickListener
 				boolean isFound = true;
 				for (Venue venueToAdd : venuesToAdd)
 				{
-					int len = venues.size();
+					int len = dataSource.getVenues().size();
 					if (len > 0)
 					{
 						isFound = false;
-						for (Venue venue : venues)
+						for (Venue venue : dataSource.getVenues())
 						{
 							if (venue.equals(venueToAdd))
 							{
@@ -130,34 +126,30 @@ public class QuestionActivity extends Activity implements OnClickListener
 						}
 					}
 					else
-						venues.add(venueToAdd);
+						dataSource.getVenues().add(venueToAdd);
 					
 					if (!isFound)
-						venues.add(venueToAdd);
+						dataSource.getVenues().add(venueToAdd);
 				}
 			}
 
 			questionCount++;
 
 		}
-		
-		if (questionCount < 5 && venues.size() < 5 && questions.size()>0)
+		if(dataSource.getVenues().size()==0){
+			DataSource.getInstance().nothingFound=true;
+			goToResults();
+		}
+		if (questionCount < 5 && dataSource.getVenues().size() < 5 && dataSource.getVenues().size()>0)
 		{
 			Intent intent = new Intent(getBaseContext(), QuestionActivity.class);
 			intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-//			intent.putIntegerArrayListExtra("selected", selected);
-			intent.putIntegerArrayListExtra("questions", questions);
-			intent.putExtra("question", questionCount);
-			intent.putParcelableArrayListExtra("venues", venues);
 			startActivity(intent); // Activity is created.
 
 		}
 		else
 		{
-			Intent intent = new Intent(this, ResultActivity.class);
-			intent.putParcelableArrayListExtra("venues", venues);
-			intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-			startActivity(intent); // Activity is created.
+			goToResults();
 		}
 
 		finish();
@@ -171,4 +163,8 @@ public class QuestionActivity extends Activity implements OnClickListener
 			db.close();
 	}
 
+	public void goToResults(){
+		Intent intent = new Intent(this, ResultActivity.class);
+		startActivity(intent); // Activity is created.
+	}
 }

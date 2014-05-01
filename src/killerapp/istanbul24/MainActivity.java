@@ -3,6 +3,7 @@ package killerapp.istanbul24;
 import java.util.ArrayList;
 import java.util.Calendar;
 
+import data.DataSource;
 import killerapp.istanbul24.db.DatabaseHelper;
 import killerapp.istanbul24.db.Venue;
 import android.app.Activity;
@@ -51,21 +52,9 @@ public class MainActivity extends Activity
 		}
 		
 		ArrayList<Integer> questions = new DatabaseHelper(this).getQuestions(catID);
+		DataSource.getInstance().setQuestions(questions);
 
-//		ArrayList<Integer> selected = new ArrayList<Integer>(); // It is empty.
-																// Selected tags
-																// will add into
-																// this.
-		ArrayList<Venue> venues = new ArrayList<Venue>(); // It is empty. Places
-															// will add into
-															// this.
-
-		Intent intent = new Intent(getBaseContext(), RangeActivity.class); // Intent is
-																	// created.
-//		intent.putExtra("selected", selected);
-		intent.putExtra("question", 0);
-		intent.putExtra("questions", questions);
-		intent.putParcelableArrayListExtra("venues", venues);
+		Intent intent = new Intent(getBaseContext(), RangeActivity.class); // Intent is created.
 		startActivity(intent); // Activity is created.
 	}
 
