@@ -44,5 +44,7 @@ public class ResultListAdapter extends ArrayAdapter<Venue> {
 		
         return convertView;
 	}
+	
+	
 
 }

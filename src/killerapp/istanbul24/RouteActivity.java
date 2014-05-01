@@ -304,7 +304,7 @@ public class RouteActivity extends MapActivity
 						.setAlgorithm("dijkstrabi")
 						.putHint("instructions", false)
 						.putHint("douglas.minprecision", 1)
-						.setVehicle("foot");
+						.setVehicle("car");
 
 				GraphHopper _gh = ((GraphHopper) hopper);
 
