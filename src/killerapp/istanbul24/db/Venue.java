@@ -19,7 +19,7 @@ public final class Venue implements Parcelable, Serializable
 	private double longitude;
 	private double latitude;
 	private String lastUpdateDate;
-	private double fakeDistance = -1;
+	private double distance = -1;
 	
 	public Venue(String id, String address, String name, double longitude,
 			double latitude, String lastUpdateDate)
@@ -135,14 +135,14 @@ public final class Venue implements Parcelable, Serializable
 	
 	public double getFakeDistance()
 	{
-		if(fakeDistance == -1)
+		if(distance == -1)
 		{
-			fakeDistance = Math.sqrt(
+			distance = Math.sqrt(
 				(longitude - CurrentLocation.longitude) * (longitude - CurrentLocation.longitude)
 				+ (latitude - CurrentLocation.latitude) * (latitude - CurrentLocation.latitude));
 		}
 		
-		return fakeDistance;
+		return distance;
 	}
 	
 	/**
@@ -170,5 +170,14 @@ public final class Venue implements Parcelable, Serializable
 		}
 		
 		return false;
+	}
+
+	public void setDistance(Double dist) {
+		distance = dist;
+		
+	}
+	
+	public double getDistance(){
+		return Math.round(distance);
 	}
 }

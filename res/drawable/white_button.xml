@@ -12,7 +12,7 @@
             <stroke android:width="3dip" android:color="#FFFFFFFF" />
 
    
-            <solid android:color="#9FFFFFFF" />
+            <solid android:color="#6FFFFFFF" />
         </shape></item>
     <item><shape android:shape="rectangle">
             <corners android:radius="10dip" />

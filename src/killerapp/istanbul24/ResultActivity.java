@@ -3,6 +3,7 @@ package killerapp.istanbul24;
 import java.io.Serializable;
 import java.util.ArrayList;
 
+import killerapp.istanbul24.adapters.ResultListAdapter;
 import killerapp.istanbul24.db.DatabaseHelper;
 import killerapp.istanbul24.db.Venue;
 
@@ -15,7 +16,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 /**
@@ -53,20 +53,18 @@ public class ResultActivity extends Activity
 			venues = sortVenues(db.getVenues(CurrentLocation.longitude, CurrentLocation.latitude));
 		}
 
-		Log.d("venue", venues.size() + "");
 
-		ArrayList<String> nameList = new ArrayList<String>();
 
 		for (Venue venue : venues)
 		{
 			GeoPoint geo1 = new GeoPoint(venue.getLatitude(), venue.getLongitude());
 			GeoPoint geo2 = new GeoPoint(CurrentLocation.latitude, CurrentLocation.longitude);
-			nameList.add(venue.getName() + " (~" + (int) (calculateDistance(geo1, geo2) * 1000) + "m)");
+			venue.setDistance((double) (calculateDistance(geo1, geo2) * 1000));
 		}
 
 		ListView listView = (ListView) this.findViewById(R.id.listView_items);
 
-		ArrayAdapter<String> itemAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, nameList);
+		ResultListAdapter itemAdapter = new ResultListAdapter(this, venues);
 		listView.setAdapter(itemAdapter);
 
 		listView.setOnItemClickListener(new OnItemClickListener()

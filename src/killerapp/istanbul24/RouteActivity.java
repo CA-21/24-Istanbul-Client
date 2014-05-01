@@ -377,8 +377,13 @@ public class RouteActivity extends MapActivity
 					textView.setText(venue.getName() + "\n(Distance: "
 							+ String.format("%.02f", distance) + "m)");
 
-					if (!venue.getAddress().equals("null"))
+					if (!venue.getAddress().equals("null")){
 						textView.append("\nAddress: " + venue.getAddress());
+						log("addr:" + venue.getAddress());
+					}
+					else {
+						textView.append("\nAddress: " + "Not Available");
+					}
 				}
 				else
 				{

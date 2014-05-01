@@ -81,6 +81,7 @@ public class MainActivity extends Activity
 		intent.putExtra("question", 0);
 		intent.putExtra("questions", questions);
 		intent.putParcelableArrayListExtra("venues", venues);
+		intent.putIntegerArrayListExtra("questions", questions);
 		startActivity(intent); // Activity is created.
 	}
 
